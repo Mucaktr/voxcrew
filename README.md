@@ -29,6 +29,18 @@ VoxCrew runs on your computer. Use a local model or connect a hosted provider wi
 
 Built for individual developers and AI tinkerers who want a visual way to work with their existing models. This is an early, single-user release; see the [free-edition limits](#free-edition-and-current-limits).
 
+## More videos
+
+Three screen recordings from the public free edition. Click a preview to open the video. Each clip has English and Turkish captions and no audio.
+
+| Take a break · 40 sec | Explore the landmarks · 36 sec | Meet your crew · 81 sec |
+|---|---|---|
+| [![Fishing, tea and seagulls in VoxCrew's Istanbul](docs/media/voxcrew-breaks-40s.jpg)](docs/media/voxcrew-breaks-40s.mp4) | [![Istanbul, Cappadocia and London's voxel landmarks](docs/media/voxcrew-landmarks-36s.jpg)](docs/media/voxcrew-landmarks-36s.mp4) | [![A completed agent task in VoxCrew](docs/media/voxcrew-agent-menus-81s.jpg)](docs/media/voxcrew-agent-menus-81s.mp4) |
+| Catch an anchovy, sip tea by the Bosphorus and share a simit with the seagulls. | Visit Galata Tower, the Bosphorus Bridge, Maiden's Tower, Cappadocia's fairy chimneys and London's riverside landmarks. | Choose a model, assign a real task, inspect its result and trace, then explore workflows, scheduling, shared memory, the inbox and output controls. |
+| [Watch / download MP4](docs/media/voxcrew-breaks-40s.mp4?raw=1) · [Subtitles](docs/media/voxcrew-breaks-40s.srt) | [Watch / download MP4](docs/media/voxcrew-landmarks-36s.mp4?raw=1) · [Subtitles](docs/media/voxcrew-landmarks-36s.srt) | [Watch / download MP4](docs/media/voxcrew-agent-menus-81s.mp4?raw=1) · [Subtitles](docs/media/voxcrew-agent-menus-81s.srt) |
+
+The agent video includes a completed **Ollama qwen3:4b** task: **1 min 16 sec**, with **1,023 tokens** reported by the app. Waiting is shortened in the edit. The workflow editor, scheduling and export options are previews; the result is actually pinned.
+
 ## Quick start
 
 Install **[Git](https://git-scm.com/downloads)**, **[uv](https://docs.astral.sh/uv/getting-started/installation/)** and **[Node.js 20+](https://nodejs.org/)**. Open a new terminal afterward. uv can install Python 3.11+ if needed.

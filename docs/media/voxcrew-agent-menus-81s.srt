@@ -1,0 +1,59 @@
+1
+00:00:00,000 --> 00:00:06,000
+Your crew, in one place
+İki aktif ajan ve yedek kadro görünümü.
+
+2
+00:00:06,000 --> 00:00:15,000
+Choose each agent’s model
+Ollama, Codex CLI ve Claude Code seçeneklerini aynı profilde gör.
+
+3
+00:00:15,000 --> 00:00:21,000
+Give the Researcher a concrete task
+Görevi yaz, ajanı ve çalışacağı ofisi seç.
+
+4
+00:00:21,000 --> 00:00:26,000
+Choose what the task remembers
+Ortak hafızayı oku; sonucu sonraki görevler için sakla.
+
+5
+00:00:26,000 --> 00:00:31,000
+Assign the task
+Yerel Ollama görevi gerçekten başlıyor.
+
+6
+00:00:31,000 --> 00:00:39,000
+Read the finished result
+Gerçek çalışma: 1 dk 16 sn · 1.023 token · bekleme kısaltıldı.
+
+7
+00:00:39,000 --> 00:00:45,000
+Inspect timing, tokens and steps
+İşlem izi: 1 deneme, 0 araç çağrısı; görev sonucu kayıtlı.
+
+8
+00:00:45,000 --> 00:00:52,000
+Research → Approve → Write → Review
+İş akışı düzenleyicisinde insan onayı adımını incele.
+
+9
+00:00:52,000 --> 00:00:59,000
+Preview scheduling options
+Cron ve aralık seçenekleri; bu çekimde zamanlama oluşturulmadı.
+
+10
+00:00:59,000 --> 00:01:07,000
+Open the memory created by the task
+Kontrol listesi, kavram ve olgu bağlantılarıyla ortak hafızada.
+
+11
+00:01:07,000 --> 00:01:14,000
+Read your agent’s delivery
+Gelen kutusundan tamamlanan görevin mesajını ve sonucunu aç.
+
+12
+00:01:14,000 --> 00:01:21,000
+Pin a result. Explore export options.
+Çıktıyı sabitle; Markdown, metin, Word ve PDF seçeneklerini gör.

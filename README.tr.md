@@ -29,6 +29,18 @@ VoxCrew kendi bilgisayarında çalışır. Yerel bir model kullanabilir veya ken
 
 Mevcut modelleriyle görsel bir ortamda çalışmak isteyen bireysel geliştiriciler ve yapay zekâ meraklıları için tasarlandı. Tek kullanıcılı, erken bir sürümdür; [ücretsiz sürümün sınırlarına](#ücretsiz-sürüm-ve-mevcut-sınırlar) göz at.
 
+## Diğer videolar
+
+Herkese açık ücretsiz sürümden üç ekran kaydı. Videoyu açmak için önizlemeye tıkla. Her video Türkçe ve İngilizce açıklamalıdır; ses içermez.
+
+| Şehirde mola · 40 sn | İkonik yapıları keşfet · 36 sn | Ajanlar ve menüler · 81 sn |
+|---|---|---|
+| [![VoxCrew İstanbul'da balık tutma, çay ve martılar](docs/media/voxcrew-breaks-40s.jpg)](docs/media/voxcrew-breaks-40s.mp4) | [![İstanbul, Kapadokya ve Londra'nın voksel yapıları](docs/media/voxcrew-landmarks-36s.jpg)](docs/media/voxcrew-landmarks-36s.mp4) | [![VoxCrew'da tamamlanmış bir ajan görevi](docs/media/voxcrew-agent-menus-81s.jpg)](docs/media/voxcrew-agent-menus-81s.mp4) |
+| Hamsi yakala, Boğaz kıyısında çay iç ve martılara simit ver. | Galata Kulesi, Boğaz Köprüsü, Kız Kulesi, Kapadokya'nın peri bacaları ve Londra'nın nehir kıyısındaki yapılarını gez. | Model seç, gerçek bir görev ata, sonucu ve işlem izini incele; ardından iş akışları, zamanlama, ortak hafıza, gelen kutusu ve çıktı menülerini keşfet. |
+| [MP4 izle / indir](docs/media/voxcrew-breaks-40s.mp4?raw=1) · [Altyazı](docs/media/voxcrew-breaks-40s.srt) | [MP4 izle / indir](docs/media/voxcrew-landmarks-36s.mp4?raw=1) · [Altyazı](docs/media/voxcrew-landmarks-36s.srt) | [MP4 izle / indir](docs/media/voxcrew-agent-menus-81s.mp4?raw=1) · [Altyazı](docs/media/voxcrew-agent-menus-81s.srt) |
+
+Ajan videosunda **Ollama qwen3:4b** ile tamamlanan gerçek görev **1 dakika 16 saniye** sürdü; uygulama **1.023 token** bildirdi. Kurguda bekleme kısaltıldı. İş akışı düzenleyicisi, zamanlama ve dışa aktarma seçenekleri önizleme olarak gösterildi; görev çıktısı gerçekten sabitlendi.
+
 <a name="hizli-baslangic"></a>
 ## Hızlı başlangıç
 

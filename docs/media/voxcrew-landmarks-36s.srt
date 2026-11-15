@@ -1,0 +1,29 @@
+1
+00:00:00,000 --> 00:00:06,000
+Istanbul · Galata Tower
+Galata Kulesi · Uygulamadaki manzara modundan gerçek ekran kaydı.
+
+2
+00:00:06,000 --> 00:00:12,000
+Istanbul · Bosphorus Bridge
+Boğaz Köprüsü · Şehir yapılarının voksel yorumları.
+
+3
+00:00:12,000 --> 00:00:18,000
+Istanbul · Maiden’s Tower
+Kız Kulesi · Kıyı yaşamını ve yapıların bilgi kartlarını keşfet.
+
+4
+00:00:18,000 --> 00:00:24,000
+Cappadocia · Fairy chimneys
+Kapadokya · Peri bacaları, köy ve sıcak hava balonları.
+
+5
+00:00:24,000 --> 00:00:30,000
+London · Towered drawbridge
+Londra · Köprü, kırmızı otobüsler ve nehir trafiği.
+
+6
+00:00:30,000 --> 00:00:36,000
+London · Riverside panorama
+Londra’yı keşfet · github.com/Mucaktr/voxcrew
