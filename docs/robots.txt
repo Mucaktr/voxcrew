@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://mucaktr.github.io/voxcrew/sitemap.xml

@@ -1,0 +1,28 @@
+title: "[My crew / Ekibim] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Share a task, workflow or world you tried in VoxCrew. Small experiments count.
+        VoxCrew'da denediğin bir görev, iş akışı veya dünyayı paylaş. Küçük denemeler de değerli.
+        Use only screenshots and task content you are comfortable making public; remove secrets and personal paths.
+        Yalnızca herkese açık paylaşabileceğin görüntü ve görev içeriğini kullan; sırları ve kişisel yolları çıkar.
+  - type: textarea
+    id: experiment
+    attributes:
+      label: What did you try? / Ne denedin?
+      description: "Name the task and your chosen model or CLI. / Görevi ve seçtiğin modeli ya da CLI'ı belirt."
+    validations:
+      required: true
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Result / Sonuç
+      description: "What worked, and what did you need to correct? An optional screenshot helps. / Ne çalıştı, neyi düzeltmen gerekti? İstersen ekran görüntüsü ekle."
+    validations:
+      required: true
+  - type: textarea
+    id: friction
+    attributes:
+      label: One thing to improve / İyileştirilecek bir şey
+      description: "Which step was unclear or slow? / Hangi adım belirsiz veya yavaştı?"

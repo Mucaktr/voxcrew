@@ -1,0 +1,41 @@
+title: "[Help / Yardım] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Tell us where your first run got stuck. English or Turkish is welcome.
+        İlk denemede takıldığın adımı paylaşabilirsin; Türkçe veya İngilizce yazabilirsin.
+        Remove API keys, personal file paths and private task content before posting.
+        API anahtarlarını, kişisel dosya yollarını ve özel görev içeriğini çıkar.
+  - type: input
+    id: environment
+    attributes:
+      label: OS and version / İşletim sistemi ve sürüm
+      placeholder: "Windows 11 · VoxCrew v0.1.0 / commit"
+    validations:
+      required: true
+  - type: input
+    id: brain
+    attributes:
+      label: Model connection / Model bağlantısı
+      placeholder: "Ollama qwen3:4b, Codex CLI, Claude Code, or not configured / henüz kurulmadı"
+    validations:
+      required: true
+  - type: dropdown
+    id: stage
+    attributes:
+      label: Where did you get to? / Hangi adıma ulaştın?
+      options:
+        - "Installing / Kurulum"
+        - "App opens, model not connected / Uygulama açılıyor, model bağlı değil"
+        - "Model connected, first task not complete / Model bağlı, ilk görev tamamlanmadı"
+        - "First task complete, another question / İlk görev tamamlandı, başka bir sorum var"
+    validations:
+      required: true
+  - type: textarea
+    id: question
+    attributes:
+      label: What happened? / Ne oldu?
+      description: "What did you try, what did you expect, and what appeared? / Ne denedin, ne bekledin, ne gördün?"
+    validations:
+      required: true

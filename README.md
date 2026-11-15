@@ -2,13 +2,15 @@
 
 # VoxCrew
 
-### Give your AI agents a world to work in.
+[![VoxCrew cover illustration — Give your AI agents a world to work in.](docs/assets/voxcrew-cover.jpg)](https://mucaktr.github.io/voxcrew/)
 
 A local-first visual workspace for your AI crew. Connect Ollama, Codex CLI, Claude Code or your own model endpoint, run workflows, and follow your agents in a voxel world.
 
 **Early release · 2 active agents · Windows / macOS / Linux · English / Türkçe**
 
-**[Get started](#quick-start)** · [Choose a model](#brains-you-can-use) · [Ask a question](https://github.com/Mucaktr/voxcrew/discussions) · [Türkçe](README.tr.md)
+**[Get started](#quick-start)** · [Your first result](#get-your-first-result) · [Website](https://mucaktr.github.io/voxcrew/) · [Releases](https://github.com/Mucaktr/voxcrew/releases) · [Türkçe](README.tr.md)
+
+[![Build and startup checks](https://github.com/Mucaktr/voxcrew/actions/workflows/ci.yml/badge.svg)](https://github.com/Mucaktr/voxcrew/actions/workflows/ci.yml) · [Source available · PolyForm Shield](LICENSE) · [Questions and feedback](https://github.com/Mucaktr/voxcrew/discussions)
 
 [![VoxCrew completes a real AI task and explores Istanbul, Cappadocia and London](docs/media/voxcrew-demo-preview.gif)](docs/media/voxcrew-demo.mp4)
 
@@ -28,18 +30,6 @@ VoxCrew runs on your computer. Use a local model or connect a hosted provider wi
 - **Keep shared context:** use a local SQLite graph with full-text recall, pinned facts and invalidation.
 
 Built for individual developers and AI tinkerers who want a visual way to work with their existing models. This is an early, single-user release; see the [free-edition limits](#free-edition-and-current-limits).
-
-## More videos
-
-Three screen recordings from the public free edition. Click a preview to open the video. Each clip has English and Turkish captions and no audio.
-
-| Take a break · 40 sec | Explore the landmarks · 36 sec | Meet your crew · 81 sec |
-|---|---|---|
-| [![Fishing, tea and seagulls in VoxCrew's Istanbul](docs/media/voxcrew-breaks-40s.jpg)](docs/media/voxcrew-breaks-40s.mp4) | [![Istanbul, Cappadocia and London's voxel landmarks](docs/media/voxcrew-landmarks-36s.jpg)](docs/media/voxcrew-landmarks-36s.mp4) | [![A completed agent task in VoxCrew](docs/media/voxcrew-agent-menus-81s.jpg)](docs/media/voxcrew-agent-menus-81s.mp4) |
-| Catch an anchovy, sip tea by the Bosphorus and share a simit with the seagulls. | Visit Galata Tower, the Bosphorus Bridge, Maiden's Tower, Cappadocia's fairy chimneys and London's riverside landmarks. | Choose a model, assign a real task, inspect its result and trace, then explore workflows, scheduling, shared memory, the inbox and output controls. |
-| [Watch / download MP4](docs/media/voxcrew-breaks-40s.mp4?raw=1) · [Subtitles](docs/media/voxcrew-breaks-40s.srt) | [Watch / download MP4](docs/media/voxcrew-landmarks-36s.mp4?raw=1) · [Subtitles](docs/media/voxcrew-landmarks-36s.srt) | [Watch / download MP4](docs/media/voxcrew-agent-menus-81s.mp4?raw=1) · [Subtitles](docs/media/voxcrew-agent-menus-81s.srt) |
-
-The agent video includes a completed **Ollama qwen3:4b** task: **1 min 16 sec**, with **1,023 tokens** reported by the app. Waiting is shortened in the edit. The workflow editor, scheduling and export options are previews; the result is actually pinned.
 
 ## Quick start
 
@@ -86,6 +76,18 @@ Alex will check the guide. Sam will record the walkthrough on Thursday.
 4. Open the run to inspect its output and trace. Expect a short summary of the supplied text; quality depends on your model.
 
 The starter **Developer** has write permission in the work folder. **Researcher** starts with read permission. Check your selected brain's permission behavior before using real project files.
+
+## More videos
+
+Three screen recordings from the public free edition. Click a preview to open the video. Each clip has English and Turkish captions and no audio.
+
+| Take a break · 40 sec | Explore the landmarks · 36 sec | Meet your crew · 81 sec |
+|---|---|---|
+| [![Fishing, tea and seagulls in VoxCrew's Istanbul](docs/media/voxcrew-breaks-40s.jpg)](docs/media/voxcrew-breaks-40s.mp4) | [![Istanbul, Cappadocia and London's voxel landmarks](docs/media/voxcrew-landmarks-36s.jpg)](docs/media/voxcrew-landmarks-36s.mp4) | [![A completed agent task in VoxCrew](docs/media/voxcrew-agent-menus-81s.jpg)](docs/media/voxcrew-agent-menus-81s.mp4) |
+| Catch an anchovy, sip tea by the Bosphorus and share a simit with the seagulls. | Visit Galata Tower, the Bosphorus Bridge, Maiden's Tower, Cappadocia's fairy chimneys and London's riverside landmarks. | Choose a model, assign a real task, inspect its result and trace, then explore workflows, scheduling, shared memory, the inbox and output controls. |
+| [Watch / download MP4](docs/media/voxcrew-breaks-40s.mp4?raw=1) · [Subtitles](docs/media/voxcrew-breaks-40s.srt) | [Watch / download MP4](docs/media/voxcrew-landmarks-36s.mp4?raw=1) · [Subtitles](docs/media/voxcrew-landmarks-36s.srt) | [Watch / download MP4](docs/media/voxcrew-agent-menus-81s.mp4?raw=1) · [Subtitles](docs/media/voxcrew-agent-menus-81s.srt) |
+
+The agent video includes a completed **Ollama qwen3:4b** task: **1 min 16 sec**, with **1,023 tokens** reported by the app. Waiting is shortened in the edit. The workflow editor, scheduling and export options are previews; the result is actually pinned.
 
 ## Try the included workflows
 
