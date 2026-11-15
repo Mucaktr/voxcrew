@@ -1,0 +1,38 @@
+// FREE fallback of full/ui.tsx (the full-edition aggregator is deleted from the free export): same names, render nothing.
+type Props = Record<string, unknown>;
+const none = (_p: Props): null => null;
+
+export const AcademyCallout = none;
+export const AcademySettingsRow = none;
+export const RecipeStartButton = none;
+export const StarterRecipe = none;
+export const TimeSavedCard = none;
+export const ArchivePanel = none;
+export const ExhibitCard = none;
+export const useExhibits = (): { items: never[]; total: number } => EMPTY_EXHIBITS;
+const EMPTY_EXHIBITS = { items: [] as never[], total: 0 };
+export const AcceptanceBadge = none;
+export const AcceptancePanel = none;
+export const EstimateVsActual = none;
+export const MoodIndicator = none;
+export const ThankButton = none;
+export const RecognitionTab = none;
+export const RecognitionStepChip = none;
+export const RecognitionSettingsRow = none;
+export const DeliverableThank = none;
+export const WeeklyPickCard = none;
+export const GiftDepot = none;
+export const GiftDepotView = none;
+export const GiftStrip = none;
+export const GiftDialog = (_p: Props & { onGiven?: (kind: string) => void }): null => null;
+export const AgentBoosters = none;
+export const TrackingSetup = none;
+export const TelemetrySettingsRow = none;
+export const FunCheckCard = none;
+export const FunCheckToggle = none;
+export const FunTrendLine = none;
+export const GiftDepotLink = none;
+export const GiftMemoryBadge = none;
+export const useRecognitionTabLabel = (): string => "";
+export const MembershipChests = none;
+export const FeaturePacks = none;

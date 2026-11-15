@@ -1,0 +1,94 @@
+# Ofis şablonu: İkili ofis — Planlayıcı + Uygulayıcı
+# Free'nin 2 koltuğuna tam sığan ilk oturum şablonu: iki adımlı kısa bir akış, onay kapısı yok; teslim kabulü senin.
+id: ikili-plan-uygula
+name: "İkili ofis: Planla ve uygula"
+name_en: "Duo office: Plan and do"
+description_en: >-
+  Two people, two seats: a planner breaks a small job into a checklist with done criteria and a doer carries it out
+  and reports against each item. Fits the Free plan exactly.
+description: >-
+  İki kişi, iki koltuk: planlayıcı küçük bir işi bitti ölçütlü bir kontrol listesine böler, uygulayıcı işi yapar ve
+  her maddeye göre rapor verir. Free paketin iki koltuğuna tam sığar.
+icon: list-checks
+category: ikili
+order: 31
+teams:
+  - key: plan-uygulama
+    name: Plan ve uygulama
+    name_en: Plan and execution
+    mission_en: Turns a small job into a checklist and finishes it item by item.
+    mission: Küçük bir işi kontrol listesine çevirir ve madde madde bitirir.
+    color: "#7C5CFF"
+    icon: target
+    lead: planlayici
+roles:
+  - key: planlayici
+    name: Selin
+    title: Planlayıcı
+    title_en: Planner
+    role_en: >-
+      Planner. Breaks the job into at most 5 concrete steps, each with an expected output and a yes/no done criterion.
+    persona_en: Calm and systematic; plans the fewest steps that cover the job and names what is out of scope.
+    team: plan-uygulama
+    reports_to: null
+    color: "#7C5CFF"
+    role: Planlayıcı. İşi her biri beklenen çıktılı ve evet/hayır bitti ölçütlü en çok 5 somut adıma böler.
+    persona: Sakin ve sistemli; işi kapsayan en az adımı planlar, kapsam dışını adıyla söyler.
+    skills_hint: [document-to-action-items, spike]
+    rank: lead
+    brain_hint: standard
+    toolsets_hint: [todo]
+    avatar: {species: human, skin: "#E0AC69", hair: bun, hairColor: "#3E2723", beard: none, outfit: suit,
+             outfitColor: "#7C5CFF", accent: "#FFD166", glasses: round, hat: none}
+  - key: uygulayici
+    name: Kaan
+    title: Uygulayıcı
+    title_en: Doer
+    role_en: Doer. Carries out the plan step by step and reports each done criterion as met or not met.
+    persona_en: Practical and honest; never says done without checking the criterion and states what is left.
+    team: plan-uygulama
+    reports_to: planlayici
+    color: "#F59E0B"
+    role: Uygulayıcı. Planı adım adım uygular ve her bitti ölçütünü karşılandı ya da karşılanmadı diye raporlar.
+    persona: Pratik ve dürüst; ölçütü denetlemeden "bitti" demez, kalan işi açıkça söyler.
+    skills_hint: [requesting-code-review, docx]
+    rank: specialist
+    brain_hint: standard
+    toolsets_hint: [file, terminal]
+    permissions: write
+    avatar: {species: human, skin: "#C68642", hair: short, hairColor: "#1F1A17", beard: stubble, outfit: hoodie,
+             outfitColor: "#F59E0B", accent: "#38BDF8", glasses: square, hat: headphones}
+workflow:
+  slug: ikili-plan-uygula
+  name: Planla ve uygula
+  name_en: Plan and do
+  description_en: The planner writes a checklist with done criteria → the doer carries it out and reports → you accept it.
+  description: Planlayıcı bitti ölçütlü bir kontrol listesi yazar → uygulayıcı işi yapar ve raporlar → sen kabul edersin.
+  icon: list-checks
+  inputs:
+    - name: is
+      label: Yapılacak iş
+      label_en: The job
+      type: text
+      default: ''
+      required: true
+  steps:
+    - id: plan
+      type: agent
+      title: Kontrol listesi
+      title_en: Checklist
+      role: planlayici
+      prompt: |
+        İş: "{{input.is}}"
+
+        Bu işi en çok 5 somut adıma böl. Her adım için beklenen çıktıyı ve evet/hayır bitti ölçütünü yaz.
+    - id: uygula
+      type: agent
+      title: Uygulama ve rapor
+      title_en: Execution and report
+      role: uygulayici
+      depends_on: [plan]
+      prompt: |
+        Aşağıdaki planı uygula. Sonunda her adım için "karşılandı" ya da "karşılanmadı" yaz ve kalan işi belirt.
+
+        {{steps.plan.output}}

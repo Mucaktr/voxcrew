@@ -1,0 +1,52 @@
+# Örnek akış: başlangıç ekibiyle (Yazılımcı, Araştırmacı) Hermes'siz çalışır. Kendi akışların veri dizinine kaydedilir.
+slug: arastir-ve-yaz
+name: Araştır → Onayla → Yaz → Gözden geçir
+description: Araştırmacı kaynaklı notlar çıkarır, sen onaylarsın, Yazılımcı metne döker, Araştırmacı denetler ve gerekirse düzelttirir.
+icon: pen
+inputs:
+  - name: konu
+    label: Konu
+    type: text
+    default: ''
+    required: true
+steps:
+  - id: arastir
+    type: agent
+    title: Araştırma notları
+    agent: arastirmaci
+    prompt: |
+      "{{input.konu}}" konusunu araştır. 6-10 maddelik, her maddesi kaynaklı (URL) kısa notlar çıkar.
+      Doğrulayamadığın her şeyi "DOĞRULANMADI" diye işaretle.
+  - id: onay
+    type: approval
+    title: Notları onayla
+    depends_on: [arastir]
+    message: Araştırma notları hazır. Yazım adımına geçilsin mi?
+  - id: yaz
+    type: agent
+    title: Metin taslağı
+    agent: yazilimci
+    depends_on: [onay]
+    prompt: |
+      Aşağıdaki araştırma notlarından "{{input.konu}}" hakkında 300-400 kelimelik, akıcı bir Türkçe bilgi notu yaz.
+      Kaynak numaralarını koru, notlarda olmayan bilgi ekleme.
+
+      {{steps.arastir.output}}
+  - id: denetle
+    type: agent
+    title: Doğruluk denetimi
+    agent: arastirmaci
+    depends_on: [yaz]
+    prompt: |
+      Aşağıdaki metni araştırma notlarıyla karşılaştır. Notlarda dayanağı olmayan iddia, yanlış kaynak veya
+      eksik varsa maddeler halinde yaz. Sorun yoksa yalnızca "ONAYLANDI" yaz.
+
+      ## Metin
+      {{steps.yaz.output}}
+
+      ## Notlar
+      {{steps.arastir.output}}
+    revise:
+      target: yaz
+      until: ONAYLANDI
+      max_rounds: 2

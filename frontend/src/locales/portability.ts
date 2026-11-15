@@ -1,0 +1,38 @@
+// "Her şeyi dışa aktar" paneli metinleri (TR + EN).
+import { defineMessages } from "../lib/i18n";
+
+export const portabilityMsg = defineMessages({
+  title: "Her şeyi dışa aktar",
+  intro: "Tüm verini tek bir zip olarak bilgisayarına indirebilirsin.",
+  includes: "Pakette: {list}.",
+  sec_agents: "{n} ajan (yedektekiler dahil)",
+  sec_workflows: "{n} iş akışı",
+  sec_recipes: "{n} kullanılan tarif",
+  sec_deliverables: "{n} çıktı",
+  sec_memory: "{n} bellek kaydı",
+  sec_runs: "{n} koşu özeti",
+  sec_worlds: "{n} dünya",
+  sec_ledgers: "oyun ve ölçüm defterleri",
+  excluded: "Pakete girmez: API anahtarları, erişim anahtarları, ortam değerleri, lisans ve ayar dosyası. Yerel klasör yolları maskelenir.",
+  download: "Zip olarak indir",
+  downloading: "Hazırlanıyor…",
+  done: "İndirildi ({size}).",
+  error: "Dışa aktarılamadı: {error}",
+}, {
+  title: "Export everything",
+  intro: "You can download all your data to your computer as one zip.",
+  includes: "In the bundle: {list}.",
+  sec_agents: "{n} agents (benched ones too)",
+  sec_workflows: "{n} workflows",
+  sec_recipes: "{n} recipes in use",
+  sec_deliverables: "{n} outputs",
+  sec_memory: "{n} memory records",
+  sec_runs: "{n} run summaries",
+  sec_worlds: "{n} worlds",
+  sec_ledgers: "game and metrics ledgers",
+  excluded: "Left out: API keys, tokens, env values, the license and the settings file. Local folder paths are masked.",
+  download: "Download as zip",
+  downloading: "Preparing…",
+  done: "Downloaded ({size}).",
+  error: "Couldn't export: {error}",
+});

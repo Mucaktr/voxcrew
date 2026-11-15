@@ -1,0 +1,35 @@
+# English example flow (counterpart of ../fikir-atolyesi.yaml). Same slug and step ids; runs with the starter team (Developer, Researcher) without Hermes.
+# Used in place of the Turkish example when the UI language is English (a user flow with the same slug takes precedence).
+slug: fikir-atolyesi
+name: Idea workshop (parallel)
+description: Two agents come up with ideas for the same question independently (parallel branches), then the Developer merges both into one recommendation.
+icon: sparkles
+inputs:
+  - name: soru
+    label: Question / problem
+    type: textarea
+    default: ''
+    required: true
+steps:
+  - id: fikir-a
+    type: agent
+    title: Ideas (Researcher)
+    agent: arastirmaci
+    prompt: |
+      Come up with 5 different solution ideas for this problem and write the pros and cons of each in one line:
+      {{input.soru}}
+  - id: fikir-b
+    type: agent
+    title: Ideas (Developer)
+    agent: yazilimci
+    memory: true
+    prompt: |
+      Come up with 5 unconventional solution ideas for this problem and explain each in one sentence:
+      {{input.soru}}
+  - id: sentez
+    type: agent
+    title: Synthesis and recommendation
+    agent: yazilimci
+    depends_on: [fikir-a, fikir-b]
+    prompt: |
+      Compare the two idea lists; pick the 3 strongest ideas, say why you chose them, and finish with one clear recommendation.

@@ -1,0 +1,20 @@
+# Örnek akış: başlangıç ekibiyle (Yazılımcı, Araştırmacı) Hermes'siz çalışır. Kendi akışların veri dizinine kaydedilir.
+slug: hizli-ozet
+name: Hızlı özet
+description: Yapıştırdığın metni Araştırmacı 5 maddede özetler.
+icon: zap
+inputs:
+  - name: metin
+    label: Metin
+    type: textarea
+    default: ''
+    required: true
+steps:
+  - id: ozet
+    type: agent
+    title: Özet
+    agent: arastirmaci
+    prompt: |
+      Aşağıdaki metni 5 maddede özetle; her madde en fazla 20 kelime olsun.
+
+      {{input.metin}}

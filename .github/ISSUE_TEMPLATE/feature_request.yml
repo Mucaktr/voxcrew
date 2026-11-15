@@ -1,0 +1,38 @@
+name: Özellik isteği / Feature request
+description: Yeni bir fikir ya da iyileştirme / A new idea or improvement
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Önce açık issue'lara göz atın; fikriniz zaten planlanmış olabilir.
+        Please check open issues first; your idea may already be planned.
+  - type: dropdown
+    id: area
+    attributes:
+      label: Alan / Area
+      options:
+        - Dünya ve dünya yapıcı / World and world builder
+        - Ajanlar, ofis ve hedefler / Agents, office and goals
+        - Görevler, iş akışları ve iz / Tasks, workflows and trace
+        - Beyinler ve bağlantılar / Brains and connections
+        - Bellek / Memory
+        - Skill'ler, booster'lar ve pazar / Skills, boosters and market
+        - Claude Code / Codex / MCP
+        - Oyunlaştırma / Gamification
+        - Belgeler ve kurulum / Docs and install
+        - Diğer / Other
+  - type: textarea
+    id: problem
+    attributes:
+      label: Hangi sorunu çözüyor? / What problem does it solve?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Önerin / Proposal
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Düşündüğün alternatifler / Alternatives considered

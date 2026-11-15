@@ -1,0 +1,52 @@
+// şehre ilk girişte "Hoş geldin" kartı. TR + EN aynı anahtarlar.
+// Dil: davet eder, baskı kurmaz: geri sayım, "kaçırma", "son şans", seri ya da sayaç yok. Kart bir
+// kez görünür ve ayardan kapatılabilir. Simge, semt ve ritüel adları burada kopyalanmaz (locales/city.ts, ritual<Şehir>.ts).
+import { defineMessages } from "../lib/i18n";
+
+export const welcome = defineMessages({
+  title: "Hoş geldin: {city}",
+  lead: "Başlamak için üç öneri. İstediğin sırayla gezebilirsin.",
+  row_landmark: "Simge",
+  row_ritual: "Yakında yapılacak bir şey",
+  row_view: "Seyir noktası",
+  view_name: "{district} seyir noktası",
+  view_in_map: "Şehir haritasında; buradaki “{door}” kapısından geç", // oyuncu ofiste değil, taban sahnede
+  ritual_none: "Bu şehirde etrafa bakınmak da güzel bir başlangıç.",
+  go: "Git",
+  go_aria: "{name}: oraya yürü",
+  go_ann: "{name} yönüne yürüyorsun.",
+  info: "Bilgi",
+  info_aria: "{name}: bilgi kartını aç",
+  info_ann: "{name}: bilgi kartı açıldı.",
+  ritual_later: "Bu ritüelin yeri şu an uygun değil; biraz sonra tekrar dene.",
+  close: "Kapat",
+  close_aria: "Hoş geldin kartını kapat (Esc)",
+  off: "Bir daha gösterme",
+  off_aria: "Hoş geldin kartlarını bütün şehirlerde kapat",
+  open_ann: "{city}: hoş geldin kartı açıldı. Esc ile kapanır.",
+  setting: "Şehir girişinde hoş geldin kartı",
+  setting_hint: "Her şehre ilk girişte bir kez, üç öneriyle görünür.",
+}, {
+  title: "Welcome to {city}",
+  lead: "Three ideas to start with. Explore them in any order.",
+  row_landmark: "Landmark",
+  row_ritual: "Something to do nearby",
+  row_view: "Viewpoint",
+  view_name: "{district} viewpoint",
+  view_in_map: "On the city map; go through the “{door}” door here",
+  ritual_none: "Simply looking around is a fine way to start here.",
+  go: "Go",
+  go_aria: "{name}: walk there",
+  go_ann: "Walking towards {name}.",
+  info: "Info",
+  info_aria: "{name}: open the info card",
+  info_ann: "{name}: info card opened.",
+  ritual_later: "This ritual spot isn't available right now; try again in a moment.",
+  close: "Close",
+  close_aria: "Close the welcome card (Esc)",
+  off: "Don't show again",
+  off_aria: "Turn off welcome cards for all cities",
+  open_ann: "{city}: welcome card opened. Press Esc to close.",
+  setting: "Welcome card when entering a city",
+  setting_hint: "Shown once on your first visit to each city, with three ideas.",
+});

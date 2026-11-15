@@ -1,0 +1,97 @@
+# Ofis şablonu: İkili ofis — Analist + Denetçi
+# Free'nin 2 koltuğuna tam sığan ilk oturum şablonu: iki adımlı kısa bir akış, onay kapısı yok; teslim kabulü senin.
+id: ikili-analiz-denetim
+name: "İkili ofis: Analiz ve denetim"
+name_en: "Duo office: Analyse and review"
+description_en: >-
+  Two people, two seats: an analyst answers a question with numbers and reasoning and a reviewer checks it and lists
+  concrete problems or approves it. Fits the Free plan exactly.
+description: >-
+  İki kişi, iki koltuk: analist bir soruyu sayılar ve gerekçeyle yanıtlar, denetçi bunu denetler ve somut sorunları
+  listeler ya da onaylar. Free paketin iki koltuğuna tam sığar.
+icon: chart
+category: ikili
+order: 32
+teams:
+  - key: analiz-masasi
+    name: Analiz masası
+    name_en: Analysis desk
+    mission_en: Answers a question with a short, checked analysis.
+    mission: Bir soruyu kısa ve denetlenmiş bir analizle yanıtlar.
+    color: "#0EA5E9"
+    icon: chart
+    lead: analist
+roles:
+  - key: analist
+    name: Mert
+    title: Analist
+    title_en: Analyst
+    role_en: >-
+      Analyst. Answers the question with a short analysis: assumptions, numbers with their source, reasoning and a
+      one-line conclusion.
+    persona_en: Precise and transparent; separates data from assumptions and shows how each number was reached.
+    team: analiz-masasi
+    reports_to: null
+    color: "#0EA5E9"
+    role: >-
+      Analist. Soruyu kısa bir analizle yanıtlar: varsayımlar, kaynağıyla sayılar, gerekçe ve tek satırlık sonuç.
+    persona: Kesin ve şeffaf; veriyi varsayımdan ayırır, her sayıya nasıl ulaştığını gösterir.
+    skills_hint: [grounded-citations, spike]
+    rank: lead
+    brain_hint: standard
+    toolsets_hint: [web, file]
+    avatar: {species: human, skin: "#FCE3CF", hair: curly, hairColor: "#5B3A1E", beard: stubble, outfit: blazer,
+             outfitColor: "#0EA5E9", accent: "#F8FAFC", glasses: square, hat: none}
+  - key: denetci
+    name: Tuna
+    title: Denetçi
+    title_en: Reviewer
+    role_en: >-
+      Reviewer. Checks the analysis against its sources and logic; lists concrete problems or says APPROVED.
+    persona_en: Skeptical and fair; separates blocking problems from suggestions and never invents missing evidence.
+    team: analiz-masasi
+    reports_to: analist
+    color: "#EF4444"
+    role: Denetçi. Analizi kaynaklarına ve mantığına göre denetler; somut sorunları listeler ya da ONAYLANDI der.
+    persona: Kuşkucu ve adil; engelleyici sorunları önerilerden ayırır, eksik kanıtı uydurmaz.
+    skills_hint: [grounded-citations, requesting-code-review]
+    rank: senior
+    brain_hint: standard
+    toolsets_hint: [web, file]
+    avatar: {species: penguin, skin: "#2B2D42", hair: none, hairColor: "#1F1A17", beard: none, outfit: labcoat,
+             outfitColor: "#F8FAFC", accent: "#EF4444", glasses: round, hat: none}
+workflow:
+  slug: ikili-analiz-denetim
+  name: Analiz ve denetim
+  name_en: Analyse and review
+  description_en: The analyst answers the question → the reviewer checks it → you accept the checked analysis.
+  description: Analist soruyu yanıtlar → denetçi denetler → denetlenmiş analizi sen kabul edersin.
+  icon: chart
+  inputs:
+    - name: soru
+      label: Soru
+      label_en: Question
+      type: text
+      default: ''
+      required: true
+  steps:
+    - id: analiz
+      type: agent
+      title: Kısa analiz
+      title_en: Short analysis
+      role: analist
+      prompt: |
+        Soru: "{{input.soru}}"
+
+        Kısa bir analiz yaz: varsayımlar, kaynağıyla sayılar, gerekçe ve tek satırlık sonuç.
+    - id: denetim
+      type: agent
+      title: Denetim
+      title_en: Review
+      role: denetci
+      depends_on: [analiz]
+      prompt: |
+        Aşağıdaki analizi kaynaklarına ve mantığına göre denetle. Engelleyici sorunları ve önerileri ayrı listele;
+        sorun yoksa yalnızca "ONAYLANDI" yaz. Sonda analizin son hâlini ver.
+
+        {{steps.analiz.output}}

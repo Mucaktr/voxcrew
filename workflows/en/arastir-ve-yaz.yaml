@@ -1,0 +1,53 @@
+# English example flow (counterpart of ../arastir-ve-yaz.yaml). Same slug and step ids; runs with the starter team (Developer, Researcher) without Hermes.
+# Used in place of the Turkish example when the UI language is English (a user flow with the same slug takes precedence).
+slug: arastir-ve-yaz
+name: Research → Approve → Write → Review
+description: The Researcher produces sourced notes, you approve them, the Developer turns them into text, and the Researcher checks it and asks for fixes if needed.
+icon: pen
+inputs:
+  - name: konu
+    label: Topic
+    type: text
+    default: ''
+    required: true
+steps:
+  - id: arastir
+    type: agent
+    title: Research notes
+    agent: arastirmaci
+    prompt: |
+      Research the topic "{{input.konu}}". Produce 6-10 short notes, each with a source (URL).
+      Mark everything you could not verify as "UNVERIFIED".
+  - id: onay
+    type: approval
+    title: Approve the notes
+    depends_on: [arastir]
+    message: The research notes are ready. Move on to the writing step?
+  - id: yaz
+    type: agent
+    title: Text draft
+    agent: yazilimci
+    depends_on: [onay]
+    prompt: |
+      From the research notes below, write a fluent 300-400 word briefing in English about "{{input.konu}}".
+      Keep the source numbers and do not add information that is not in the notes.
+
+      {{steps.arastir.output}}
+  - id: denetle
+    type: agent
+    title: Accuracy check
+    agent: arastirmaci
+    depends_on: [yaz]
+    prompt: |
+      Compare the text below with the research notes. List, as bullet points, any claim without support in the notes,
+      any wrong source, or anything missing. If there is no problem, write only "APPROVED".
+
+      ## Text
+      {{steps.yaz.output}}
+
+      ## Notes
+      {{steps.arastir.output}}
+    revise:
+      target: yaz
+      until: APPROVED
+      max_rounds: 2

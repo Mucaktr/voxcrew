@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "base": { "id": "office", "tr": "Ofis", "en": "Office" },
+  "cities": {
+    "istanbul": [
+      { "id": "levent", "look": "tower", "tr": "Levent İş Kulesi", "en": "Levent Office Tower" },
+      { "id": "karakoy", "look": "han", "tr": "Karaköy Han Ofisi", "en": "Karaköy Han Office" },
+      { "id": "kadikoy", "look": "loft", "tr": "Kadıköy Yaratıcı Loft", "en": "Kadıköy Creative Loft" }
+    ],
+    "kapadokya": [
+      { "id": "urgup", "look": "cave", "tr": "Ürgüp Taş Ofis", "en": "Ürgüp Stone Office" }
+    ],
+    "londra": [
+      { "id": "city", "look": "tower", "tr": "City Ofis Kulesi", "en": "City Office Tower" },
+      { "id": "shoreditch", "look": "loft", "tr": "Shoreditch Tuğla Loft", "en": "Shoreditch Brick Loft" }
+    ]
+  }
+}

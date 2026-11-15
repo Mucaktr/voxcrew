@@ -1,0 +1,924 @@
+# VoxCrew ontolojisi — grafa yalnızca burada tanımlı türler ve ilişkiler yazılabilir.
+# key: varlık çözümleme anahtarı (aynı tür + aynı anahtar = aynı düğüm)
+# search: tam metin (FTS) dizinine giren özellikler — graf belleği bunlar üzerinden hatırlar
+version: 1
+name: voxcrew
+
+entities:
+  Agent:
+    description: Görev alan ajan (Hermes profili veya stüdyo ajanı)
+    key: slug
+    label: name
+    color: "#8B5CF6"
+    search: [name, role]
+    properties:
+      slug: {type: string, required: true}
+      name: {type: string}
+      role: {type: text}
+      persona: {type: text}
+      color: {type: string}
+      # Görünüm: tür (insan/hayvan), ten/kürk, saç, sakal, kıyafet, gözlük, şapka…
+      avatar: {type: object}
+      hermes_profile: {type: string}
+      runtime: {type: string, enum: [hermes, direct]}
+      connection: {type: string, enum: [profile, ollama, codex, claude, openai_compat]}
+      model: {type: string}
+      permissions: {type: string, enum: [read, write]}
+      memory_scope: {type: string, enum: [shared, private]}
+      memory_enabled: {type: bool}
+      hidden: {type: bool}
+      created_by: {type: string, enum: [hermes, studio]}
+      # Faz 2 — Hermes yetenekleri (çalıştırma başına bayrak olarak verilir; profil dosyası değişmez)
+      skills: {type: list}          # hermes chat -s
+      toolsets: {type: list}        # hermes chat -t
+      tools: {type: object}         # S27: {allow: [kalıp], deny: [kalıp], mcp: [sunucu id]} (ayar tools.* üstüne)
+      reasoning: {type: string}     # hermes chat --reasoning (none|minimal|low|medium|high|xhigh|max|ultra)
+      # Hermes taşıması: cli (subprocess; skill/toolset bayrakları çalışır) · api (gateway /v1/runs; araç onayı,
+      # steer/stop; per-run skill yok) · auto (skill/toolset atanmışsa cli, değilse gateway sağlıklıysa api)
+      transport: {type: string, enum: [auto, cli, api]}
+      # Faz 2 — Ofis
+      team: {type: string}          # Team.slug
+      title: {type: string}         # unvan: Product Owner, Teknik Lider…
+      reports_to: {type: string}    # Agent.slug
+      # Faz 3 — kurumsal rütbe (hiyerarşi düzeyi; devretme ve oyunlaştırma unvanları buna dayanır)
+      rank: {type: string, enum: [ceo, deputy, director, manager, lead, senior, specialist, analyst, intern]}
+      # Faz 3 — bir ajanın devretme sırasında işe aldığı ajanlar
+      hired_by: {type: string}      # Agent.slug
+      hired_in_run: {type: string}  # Run.id
+      profile_model: {type: string}
+      profile_provider: {type: string}
+      has_codex_auth: {type: bool}
+      # S40 — yönetici/test modunda eklenen demo ajan (yalnızca /api/admin/demo-agents yazar ve bu işaretle siler)
+      demo: {type: bool}
+      # S44 — kahraman paketinden işe alınan ajan: hero kimliği (studio.heroes; kaldırma bu işaretle temizler)
+      hero: {type: string}
+      # yedek kulübesi (studio.entitlements.seats): koltuk dışı ajan; belleği ve geçmişi korunur, silinmez
+      benched: {type: bool}
+      # değerlendirme matrisi/booster kapısının geçici ajanı: iç işaret (matris/kapı kimliği). Yalnız iç kod
+      # yazar (olağan API'ler yazamaz); çökme sonrası kurtarma YALNIZ bu işarete bakar (ad/önek eşlemesi yok)
+      eval_matrix: {type: string}
+      # klasik değerlendirmenin geçici ajanı: iç işaret (değerlendirme kimliği; yalnız iç kod yazar)
+      eval_temp: {type: string}
+      benched_at: {type: string}
+      # başlangıç ajanı hazır beyin bulunamadan doğdu: kullanıcı beyin seçene kadar rota "Beyin seçilmedi"
+      # (bağlantı alanı yer tutucu). Yalnız başlangıç tohumu yazar; beyin seçilince false olur
+      needs_brain: {type: bool}
+      # WORK-ZONES (plan §5 C2) — ajanın varsayılan çalışma bölgesi: `<sahne>:<ofis>` (ör. istanbul:levent; yoksa taban ofis).
+      # Yalnız PUT /api/agents/{slug}/work-zone yazar (kullanıcı-yalnız); görev penceresi bunu ön seçer
+      work_zone: {type: string}
+
+  Connection:
+    description: Beyin bağlantısı (Ollama, GPT Codex, Claude Code, Hermes)
+    key: kind
+    label: name
+    color: "#0EA5E9"
+    search: [name]
+    properties:
+      kind: {type: string, required: true}
+      name: {type: string}
+      available: {type: bool}
+      version: {type: string}
+      path: {type: string}
+
+  Model:
+    description: Dil modeli (Ollama yerel modelleri veya sağlayıcı modeli)
+    key: name
+    label: name
+    color: "#06B6D4"
+    search: [name, family]
+    properties:
+      name: {type: string, required: true}
+      connection: {type: string}
+      family: {type: string}
+      parameter_size: {type: string}
+      quantization: {type: string}
+      size_bytes: {type: int}
+      num_ctx: {type: int}
+      capabilities: {type: list}
+      local: {type: bool}
+
+  Workflow:
+    description: Çok adımlı agentic iş akışı tanımı
+    key: slug
+    label: name
+    color: "#F59E0B"
+    search: [name, description]
+    properties:
+      slug: {type: string, required: true}
+      name: {type: string}
+      description: {type: text}
+      author: {type: string}   # son kaydeden (user | mcp:<istemci> | local)
+
+  Task:
+    description: Kullanıcının verdiği görev
+    key: id
+    label: title
+    color: "#EC4899"
+    search: [title, prompt]
+    properties:
+      id: {type: string, required: true}
+      title: {type: string}
+      prompt: {type: text}
+      created_at: {type: string}
+      project: {type: string}       # bellek ad alanı
+
+  Run:
+    description: Bir görevin veya iş akışının tek çalıştırılması
+    key: id
+    label: title
+    color: "#64748B"
+    search: [title]
+    properties:
+      id: {type: string, required: true}
+      title: {type: string}
+      kind: {type: string, enum: [task, workflow, delegation]}
+      workflow: {type: string}
+      origin: {type: string}        # ui | mcp:claude-code | mcp:codex | mcp:<istemci> | goal | schedule:<id>
+      goal: {type: string}          # Goal.id (devretme koşusu bir hedef için başlatıldıysa)
+      # Faz 6 — dayanıklı motor: durum değerleri paused | interrupted de olabilir
+      checkpoint: {type: object}    # adım sınırında anlık görüntü (JSON; pickle yasak)
+      forked_from: {type: string}   # Run.id (çatallandığı koşu)
+      # AUDIT 2026-10-19 P1: gizli sistem koşusu (origin `system:…`, ör. kalite denetçisi) ve üst koşusu
+      hidden: {type: bool}
+      parent_run: {type: string}
+      resumed_at: {type: string}
+      attempts: {type: int}
+      # G1-B koşu bütünlüğü: iptal isteği zamanı, iptal uzlaştırma özeti {applied:[…], unknown:[…]} ve çözülmemiş
+      # `unknown` etki bayrağı (G1-C `outcome = indeterminate` bunu okur)
+      cancel_requested_at: {type: string}
+      cancel_reconciled: {type: object}
+      indeterminate: {type: bool}
+      # koşu sürüm manifesti {studio_version, workflow_sha, prompt_layout_version, task_family, models, steps…};
+      # mutlak bitiş zamanı (ISO; devam/yeniden deneme uzatamaz)
+      manifest: {type: object}
+      deadline_at: {type: string}
+      deadline_min: {type: float}   # PROC2-FIX koşunun süre sınırı (dakika); revizyon çatalı aynı sınırı taşır
+      manifest_diff: {type: object}  # G4-REST: devamda başlangıç manifestinden farklar {changes, material, status}
+      # hata taksonomisi (workflow/error_class.py): başarısız ya da kısmen başarısız koşunun sınıfı
+      error_class: {type: string, enum: [contract, plan, handoff, retrieval, tool, verification, budget, infrastructure, interface, unknown]}
+      budget: {type: object}        # {tokens?, cost_usd?, minutes?, steps?, on_exceeded}
+      budget_initial: {type: object}  # koşu açılırken onaylanan tavan (kart/elle yükseltme hariç); çatal bunu alır
+      budget_auto: {type: object}   # otomatik koşu bütçesi {source: auto|user, tokens, estimate, factor, steps}
+      usage: {type: object}         # {tokens, cost_usd, minutes, replayed:{...}}
+      budget_overruns: {type: int}  # PROC-FIX: gerçekleşen tavan aşımı sayısı (kart onayıyla tavan sonradan yükselse de)
+      schedule: {type: string}      # Schedule.id (zamanlayıcı tetiklediyse)
+      # Faz 6 — bellek ad alanı: "project:<key>" | "global"; recall/yazma bu ad alanıyla sınırlanır
+      project: {type: string}
+      # Faz 6 — kanıtlı kapanış: pending | accepted | rejected (done ≠ accepted)
+      acceptance: {type: string}
+      # sürüm kararı belleği bekletiyor; geç birleştirilen bilgiler de yazılırken beklemeye alınır
+      # PROC2-FIX pending_review = incelenmemiş revizyon (çatal) koşusu; bilgileri kabul edilene kadar beklemede
+      memory_hold: {type: string, enum: [revision_requested, rejected, pending_review]}
+      # görev oluşturucudaki isteğe bağlı "beklenen çıktı"; kabul kaydında manuel ölçüt olur (varsayılanlar korunur)
+      expected_output: {type: text}
+      # WORK-ZONES (plan §5 C2) — görevin çalışma bölgesi (`<sahne>:<ofis>`; yoksa taban ofis = eski davranış). Kullanıcı-yalnız
+      # (görev uç noktası, MCP 403); ajan bu ofis binasına yürüyüp orada çalışır (frontend/src/voxel/workzones)
+      work_zone: {type: string}
+      status: {type: string}
+      inputs: {type: object}
+      output: {type: text}
+      error: {type: text}
+      started_at: {type: string}
+      finished_at: {type: string}
+      duration_ms: {type: int}
+      tokens: {type: object}
+      steps: {type: list}
+
+  Step:
+    description: Çalıştırma içindeki tek ajan adımı veya onay kapısı
+    key: id
+    label: title
+    color: "#94A3B8"
+    search: []
+    properties:
+      id: {type: string, required: true}
+      run_id: {type: string}
+      step_id: {type: string}
+      title: {type: string}
+      type: {type: string, enum: [agent, approval, delegate, orchestrate, handoff, system_llm]}  # system_llm: gizli sistem koşusu (AUDIT P1)
+      agent: {type: string}
+      # Faz 6: yeniden deneme ve politika, bütçe/kullanım
+      attempt: {type: int}
+      last_error: {type: text}
+      policy: {type: object}        # {retries, backoff, base_s, timeout_min, on_fail}
+      budget: {type: object}
+      usage: {type: object}
+      role: {type: string}          # Role.id — ajan çalışma anında rolden çözülür (QA-M1)
+      parent: {type: string}        # devretmede üst adım
+      depth: {type: int}
+      assignee_hired: {type: bool}
+      status: {type: string}
+      connector: {type: string}
+      connection: {type: string}
+      route_label: {type: string}
+      model: {type: string}
+      memory: {type: object}
+      # gerçekte gönderilen: taşıma (cli/api), bayraklar (-s/-t/--reasoning), oturum kimliği — istem metni hariç
+      invocation: {type: object}
+      warning: {type: text}         # ör. revise tur sınırı doldu — insan kontrolü önerilir
+      prompt: {type: text}
+      output: {type: text}
+      error: {type: text}
+      tokens: {type: object}
+      tools: {type: list}
+      rounds: {type: int}
+      recalled: {type: int}
+      recognition: {type: object}   # W1b: {used, ids, acknowledge} — istemde kullanılan takdir kayıtları
+      cache_hit_ratio: {type: float}  # önbellekten okunan / girdi; sağlayıcı bildirmediyse yok (ölçülmedi)
+      error_class: {type: string, enum: [contract, plan, handoff, retrieval, tool, verification, budget, infrastructure, interface, unknown]}  # başarısız/kısmen başarısız adımın sınıfı
+      cap: {type: object}           # G4-REST: etkin adım jeton tavanı ve kaynağı {source, tokens, estimate?}
+      workflow: {type: string}      # koşunun iş akışı (geçmiş önce adımın kendi kimliğiyle eşleşir)
+      history: {type: object}       # geçmiş örneği notu {tokens: adımın TÜM harcaması, partial, continued}
+      tools_reused: {type: list}    # `tools` listesinde önceki denemeden tekrar kullanılan araçların sırası
+      runaway: {type: object}       # "bu adım beklenenden çok harcıyor" uyarısı {spent, would_be, attempt, at}
+      unrecorded_possible: {type: object}  # olası kaydedilmemiş istek (harcama değil) {count, tokens_max, attempt, at}
+      first_in: {type: float}       # CLI adımının ilk turunun girdisi (beynin sabit istem payı ölçümü)
+      started_at: {type: string}
+      finished_at: {type: string}
+      duration_ms: {type: int}
+
+  Tool:
+    description: Ajanın çalıştırma sırasında kullandığı araç
+    key: name
+    label: name
+    color: "#A855F7"
+    search: [name]
+    properties:
+      name: {type: string, required: true}
+      uses: {type: int}
+
+  Artifact:
+    description: Ajanın ürettiği dosya
+    key: path
+    label: name
+    color: "#22C55E"
+    search: [name, path]
+    properties:
+      path: {type: string, required: true}
+      name: {type: string}
+
+  Episode:
+    description: Epizodik anı — bir adımın ne yaptığına dair özet
+    key: id
+    label: title
+    color: "#F97316"
+    search: [title, summary]
+    properties:
+      id: {type: string, required: true}
+      title: {type: string}
+      summary: {type: text}
+      agent: {type: string}
+      run_id: {type: string}
+      extractor: {type: string}
+      namespace: {type: string}     # "project:<key>" | "global"
+      importance: {type: int}
+      created_at: {type: string}
+      # S44 — hazır hafıza kaynağı (ör. hero:kok-avcisi); kahraman kaldırılınca bu işaretle silinir
+      source: {type: string}
+      # (R-1): private = yalnız üreten ajan görür; koşu kullanıcıca kabul edilince shared olur. Alan yoksa shared.
+      visibility: {type: string, enum: [private, shared]}
+      promoted_at: {type: string}
+      extractor_version: {type: string}
+      complete: {type: bool}        # (AW-T08): yazım tamamlandı; aynı adım olayı yeniden gelirse NOOP
+      forgotten_at: {type: string}  # özetten unutulan içerik çıkarıldı (karartma işareti metinde)
+      text_sha: {type: string}      # anının yazıldığı çıktının özeti; yeniden denemede farklıysa eski notlar düşer
+      review_hold: {type: string, enum: [revision_requested, rejected, pending_review]}  # PROC-FIX P2: sürüm kararı bekliyor
+      episode_kind: {type: string, enum: [review]}  # PROC2-FIX denetim adımının anısı (genel hatırlamaya girmez)
+
+  Concept:
+    description: Semantik bellek düğümü — kavram, kurum, kişi, teknoloji vb.
+    key: name
+    label: display
+    color: "#10B981"
+    search: [display, kind]
+    properties:
+      name: {type: string, required: true}
+      display: {type: string}
+      kind: {type: string}
+      mentions: {type: int}
+      namespaces: {type: list}      # kavramın görüldüğü ad alanları
+      alt_labels: {type: list}      # FAZB2 taksonomi: eş anlamlılar (skos:altLabel; studio.graph.taxonomy yazar)
+      source: {type: string}        # S44: hazır hafızanın oluşturduğu kavram (hero:<id>); var olan kavrama yazılmaz
+
+  Fact:
+    description: Semantik bellek düğümü — ajan çıktısından çıkarılmış önerme (doğrulanmamış olabilir)
+    key: hash
+    label: statement
+    color: "#3B82F6"
+    search: [statement]
+    properties:
+      hash: {type: string, required: true}
+      statement: {type: text}
+      confidence: {type: float}
+      importance: {type: int}
+      agent: {type: string}
+      namespace: {type: string}
+      created_at: {type: string}
+      # bi-temporal: bilgi silinmez; geçersiz kılınınca invalid_at dolar ve hatırlanmaz
+      valid_at: {type: string}
+      invalid_at: {type: string}
+      invalid_reason: {type: text}
+      # sabitlenen bilgi her görevde (kapsam izin veriyorsa) hatırlanır
+      pinned: {type: bool}
+      # S44 — hazır hafıza kaynağı (hero:<id>); listelenebilir ve kahramanla birlikte kaldırılabilir
+      source: {type: string}
+      # bellek iddiası (assertion v1; graph/assertion.py). Alanı olmayan eski bilgi güvenli varsayılanla okunur.
+      origin: {type: string, enum: [user_stated, agent_inferred, tool_observed, imported]}
+      epistemic_status: {type: string, enum: [asserted, inferred, verified, disputed]}  # verified: yalnız kullanıcı
+      lifecycle: {type: string, enum: [active, superseded, invalid]}
+      trust: {type: string, enum: [trusted, untrusted]}
+      visibility: {type: string, enum: [private, shared]}   # R-1: private = ajanın özel notu; yoksa shared
+      valid_from: {type: string}    # geçerlilik zamanı (bilinmiyorsa yok/null; kayıt zamanıyla doldurulmaz)
+      valid_to: {type: string}
+      recorded_from: {type: string} # kayıt zamanı: sistem bu sürümü ne zaman öğrendi / ne zamana kadar böyle bildi
+      recorded_to: {type: string}
+      source_refs: {type: list}     # ["ep:<adım anahtarı>#<adım düğümü>"]
+      root_evidence_refs: {type: list}  # kök kanıt: ["run:<id>", "artifact:<yol>@sha256:<x>", "user:<zaman>"]
+      source_artifacts: {type: list}
+      created_by: {type: object}    # {agent, run, extractor_version}
+      extractor_version: {type: string}
+      run_id: {type: string}
+      version: {type: int}          # beklenen sürüme karşı yazım (AW-T07)
+      # PROC-FIX P2: revizyonu istenen / reddedilen sürümün bilgisi — kabul edilene kadar hatırlanmaz
+      review_hold: {type: string, enum: [revision_requested, rejected, pending_review]}
+      review_run: {type: string}
+      # PROC2-FIX `kind: review` adımının bulgusu — dünyaya dair bilgi değil; denetlenen koşuya bağlı (FINDING_OF),
+      # genel hatırlamaya girmez
+      fact_kind: {type: string, enum: [world, review_finding]}
+      review_of: {type: string}     # denetlenen koşu (Run.id)
+      review_step: {type: string}   # bulguyu üreten denetim adımı
+      promoted_to: {type: string}   # özel kopya → ortak bilginin id'si
+      promoted_from: {type: string}
+      eval_matrix: {type: string}   # matris/kapı tohum bilgisi iç işareti (kurtarma yalnız buna bakar)
+      eval_temp: {type: string}     # klasik değerlendirme tohum bilgisi iç işareti (gizleme yalnız buna bakar)
+      promoted_at: {type: string}
+      verified_by: {type: string}
+      verified_at: {type: string}
+      disputed_reason: {type: text}
+      superseded_by: {type: string}
+      corrected_by: {type: string}
+
+  Team:
+    description: Ofisteki ekip/departman (ör. Ürün, Geliştirme, Kalite, Tasarım, Araştırma)
+    key: slug
+    label: name
+    color: "#E11D48"
+    search: [name, mission]
+    properties:
+      slug: {type: string, required: true}
+      name: {type: string}
+      mission: {type: text}
+      color: {type: string}
+      icon: {type: string}
+      lead: {type: string}          # Agent.slug
+      order: {type: int}
+      template: {type: string}      # oluşturan ofis şablonu
+      created_at: {type: string}
+
+  Role:
+    description: Ofisteki rol (ör. Teknik Lider). İş akışı adımı role bağlanır; rolü taşıyan ajan çalışma anında çözülür.
+    key: id
+    label: name
+    color: "#F97316"
+    search: [name, description]
+    properties:
+      id: {type: string, required: true}
+      name: {type: string}
+      description: {type: text}
+      team: {type: string}          # Team.slug
+      rank: {type: string}
+      skills_hint: {type: list}     # gerçek Hermes skill adları (QA-M2)
+      brain_hint: {type: string}    # economy | balanced | quality stratejisinde rolün ağırlığı
+      template: {type: string}
+      created_at: {type: string}
+
+  Skill:
+    description: Hermes skill'i (SKILL.md) — ajanlara atanabilir yetenek paketi
+    key: name
+    label: name
+    color: "#D946EF"
+    search: [name, description]
+    properties:
+      name: {type: string, required: true}
+      description: {type: text}
+      category: {type: string}
+      source: {type: string}
+      path: {type: string}
+
+  # Faz 3 — oyunlaştırma: kazanılan başarımlar grafın parçasıdır (defter/ledger ayrı tablolardadır)
+  Achievement:
+    description: Kazanılabilen başarım (rozet)
+    key: id
+    label: name
+    color: "#EAB308"
+    search: [name, description]
+    properties:
+      id: {type: string, required: true}
+      name: {type: string}
+      description: {type: text}
+      rarity: {type: string, enum: [common, rare, epic, legendary]}
+      icon: {type: string}
+      category: {type: string}
+
+  # Faz 3 — toplu hedefler (OKR benzeri): şirket → ekip → ajan hedef ağacı
+  Goal:
+    description: Ofis, ekip veya ajan hedefi (anahtar sonuçlarla); devretme koşusuyla yürütülebilir
+    key: id
+    label: title
+    color: "#F43F5E"
+    search: [title, description]
+    properties:
+      id: {type: string, required: true}
+      title: {type: string}
+      description: {type: text}
+      level: {type: string, enum: [company, team, agent]}
+      owner_team: {type: string}    # Team.slug
+      owner_agent: {type: string}   # Agent.slug (genellikle yönetici)
+      parent: {type: string}        # üst Goal.id
+      key_results: {type: list}     # [{id, title, target, current, unit, done}]
+      status: {type: string, enum: [draft, active, in_progress, done, blocked, cancelled]}
+      progress: {type: float}       # 0..1
+      due: {type: string}
+      priority: {type: string, enum: [low, medium, high, critical]}
+      created_at: {type: string}
+      completed_at: {type: string}
+      project: {type: string}       # hedefin koşuları bu bellek ad alanında
+
+  # Faz 4 — Hermes dışı kaynaklardan (Claude Code) izlenen projeler ve oturumlar
+  Project:
+    description: Harici olarak izlenen proje (ör. bir Claude Code çalışma klasörü)
+    key: key
+    label: name
+    color: "#0F766E"
+    search: [name, path]
+    properties:
+      key: {type: string, required: true}
+      name: {type: string}
+      path: {type: string}
+      source: {type: string}
+      created_at: {type: string}
+
+  ExternalSession:
+    description: Harici ajan oturumu (Claude Code oturumu veya alt ajanı)
+    key: id
+    label: title
+    color: "#14B8A6"
+    search: [title, project]
+    properties:
+      id: {type: string, required: true}
+      source: {type: string}        # claude-code
+      title: {type: string}
+      project: {type: string}       # Project.key
+      cwd: {type: string}
+      model: {type: string}
+      agent_type: {type: string}    # alt ajanlar için
+      parent: {type: string}        # üst oturum id'si (alt ajan)
+      status: {type: string}
+      started_at: {type: string}
+      ended_at: {type: string}
+      stats: {type: object}         # araç sayısı, token, maliyet (varsa)
+
+  # Faz 6 — ajanlar arası mesajlaşma: handoff olayı artık bir Message düğümü taşır
+  Message:
+    description: Ajanlar arası (ya da kullanıcıdan ajana) mesaj — görev verme, devretme, soru, yanıt, not
+    key: id
+    label: subject
+    color: "#0EA5E9"
+    search: [subject, summary]
+    properties:
+      id: {type: string, required: true}
+      run_id: {type: string}
+      step_id: {type: string}
+      from_agent: {type: string}    # Agent.slug ya da "user"
+      to_agent: {type: string}
+      kind: {type: string, enum: [handoff, assign, ask, answer, note, system, deliverable]}
+      subject: {type: string}
+      body: {type: text}            # tam içerik (istem yalnızca summary alır; "doğrulanmamış" etiketiyle)
+      summary: {type: text}
+      artifacts: {type: list}
+      reply_to: {type: string}
+      created_at: {type: string}
+      read_at: {type: string}
+
+  # S50 — teslim edilen çıktılar: koşunun kullanıcıya teslim ettiği son adım çıktısı ya da çalışma klasöründeki dosya
+  # (Çıktılar kütüphanesi + gelen kutusu teslimi). Bellek araması (MEMORY_TYPES) bu türü okumaz; istemlere girmez.
+  Deliverable:
+    description: Bir koşunun kullanıcıya teslim ettiği çıktı (rapor, metin, kod, veri, görsel)
+    key: id
+    label: title
+    color: "#10B981"
+    search: [title, summary]
+    properties:
+      id: {type: string, required: true}
+      run_id: {type: string}
+      step_id: {type: string}
+      step_ids: {type: list}        # PROC2-FIX çok adımlı teslimin adımları (birleşik çıktı)
+      agent: {type: string}         # Agent.slug (üreten)
+      team: {type: string}          # Team.slug
+      title: {type: string}
+      run_title: {type: string}
+      source: {type: string, enum: [output, file, bundle]}  # DELIV-P0: bundle = çok dosyalı statik uygulama
+      kind: {type: string, enum: [report, text, code, data, image, other, document, presentation, sheet, media, archive, app]}
+      name: {type: string}          # dosya adı (çıktı için önerilen indirme adı)
+      path: {type: string}          # çalışma klasörüne göre göreli yol (yalnızca dosya)
+      size: {type: int}
+      summary: {type: text}         # maskeli ilk satırlar
+      excerpt: {type: text}         # maskeli arama metni (≤ 4000 karakter)
+      project: {type: string}       # koşunun bellek ad alanı
+      goal: {type: string}
+      origin: {type: string}
+      created_at: {type: string}
+      pinned: {type: bool}
+      read_at: {type: string}
+      backfilled: {type: bool}
+      quality: {type: object}       # CG-QUALITY rozet özeti {score, status, summary, headline, counts, report_id}
+      recipe: {type: string}        # FOLLOWUP: tarif koşusundan geldiyse tarif kimliği (Run.workflow = recipe-<id>)
+      forgotten_at: {type: string}  # özet unutulan içerik olmadan yeniden üretildi ya da kaldırıldı
+      # DELIV-P0: içerik adresli kasa + sürüm + paket
+      format: {type: string}        # küçük harfli uzantı (".pptx")
+      mime: {type: string}
+      sha256: {type: string}        # teslim anındaki bayt özeti (paket: manifest özeti)
+      blob: {type: string}          # kasa göreli yolu (<sha[:2]>/<sha>); boş = kasada kopya yok
+      vault_status: {type: string, enum: [stored, too_large, quota, missing, off, forgotten]}  # forgotten: unutma kasa kopyasını sildi
+      version: {type: int}
+      family: {type: string}        # koşular arası kararlı küme (sha1(proje|kaynak|yol|ajan))
+      manifest: {type: list}        # paket: [{path, sha256, size, role}]
+      entry: {type: string}         # paket giriş dosyası (manifest'e göreli)
+
+  # DELIV-P0 (D7): teslim kaydı (deliveries.json'un grafa taşınması) — içerik taşımaz
+  Delivery:
+    description: Çıktının bir hedefe teslim kaydı (onay özeti, sonuç, bağlantı; içerik yok)
+    key: id
+    label: label
+    color: "#14B8A6"
+    search: [label]
+    properties:
+      id: {type: string, required: true}
+      deliverable_id: {type: string}
+      run_id: {type: string}
+      target: {type: string}
+      status: {type: string, enum: [done, failed]}
+      ok: {type: bool}
+      external: {type: bool}
+      preview_hash: {type: string}
+      approved_at: {type: string}
+      delivered_at: {type: string}
+      options: {type: object}
+      recipients: {type: int}
+      quality: {type: object}
+      override_reason: {type: text}
+      error: {type: text}
+      result: {type: text}
+      link: {type: string}
+      ref: {type: string}
+      path: {type: string}
+      label: {type: string}
+      seq: {type: int}              # sıralama (aynı saniyedeki kayıtlar)
+      created_at: {type: string}
+
+  # CG-QUALITY — kalite kapısı raporu: teslim edilen çıktının deterministik denetimleri + isteğe bağlı AI denetçi
+  QualityReport:
+    description: Teslim edilen bir çıktının kalite raporu (puan, denetimler, konumlu bulgular, denetçi notları)
+    key: id
+    label: title
+    color: "#0EA5E9"
+    search: [title]
+    properties:
+      id: {type: string, required: true}
+      title: {type: string}         # rozet metni ("Kalite 8/10 · 2 kaynaksız iddia")
+      deliverable_id: {type: string}
+      run_id: {type: string}
+      score: {type: float}
+      status: {type: string, enum: [passed, warn, failed]}
+      checks: {type: list}          # [{id, status: passed|failed|skipped, detail, findings}]
+      findings: {type: list}        # [{id, check, severity, code, message, location, source, false_positive}]
+      reviewer: {type: object}      # {status, score, notes, brain, model, estimate, error}
+      spec: {type: object}          # normalize edilmiş denetim tanımı
+      content_hash: {type: string}
+      accepted_anyway: {type: bool}
+      accept_reason: {type: text}
+      accepted_at: {type: string}
+      revision_run_id: {type: string}
+      created_at: {type: string}
+      updated_at: {type: string}
+
+  # Faz 6 — zamanlanmış ve tetikleyicili koşular; yalnızca stüdyo çalışırken
+  Schedule:
+    description: Zamanlayıcı/tetikleyici (cron, aralık, tek sefer, webhook, dosya izleme, heartbeat)
+    key: id
+    label: title
+    color: "#A855F7"
+    search: [title]
+    properties:
+      id: {type: string, required: true}
+      title: {type: string}
+      kind: {type: string, enum: [cron, interval, once, webhook, file_watch, heartbeat, email_label, meeting_end]}
+      spec: {type: object}          # {cron | every_s | at | path | glob | debounce_s | server | label | match | keyword | event_id}
+      target: {type: object}        # {type: task|workflow|goal|recipe, agent?, workflow?, recipe?, inputs?, trigger_input?, goal_id?}
+      policy: {type: object}        # {approvals: pause|deny (eski ask → pause; approve YOK), budget, concurrency: skip_if_running|queue, catch_up}
+      enabled: {type: bool}
+      created_at: {type: string}
+      created_by: {type: string}
+      last_run_at: {type: string}
+      next_run_at: {type: string}
+      last_status: {type: string}
+      # CG2 tetikleyiciler: son yoklama, son hata ve MCP tetik durumu (görülen ileti / biten toplantı kimlikleri)
+      last_check_at: {type: string}
+      last_error: {type: text}
+      last_fired_at: {type: string}
+      last_fired_due: {type: string}  # son tetiklenen vade (idem süresi dolsa da aynı vade ikinci kez çalışmaz)
+      trigger_state: {type: object}
+
+  # Faz 6 — öğrenilen dersler (P1): koşu sonrası çıkarılan, yeniden kullanılabilir yönerge
+  Lesson:
+    description: Koşulardan öğrenilen ders (ne işe yaradı / ne yaramadı) — ileride istemlere alınabilir
+    key: id
+    label: title
+    color: "#84CC16"
+    search: [title, body]
+    properties:
+      id: {type: string, required: true}
+      title: {type: string}
+      body: {type: text}
+      agent: {type: string}
+      run_id: {type: string}
+      score: {type: float}
+      created_at: {type: string}
+
+  # Faz 6 — kanıtlı görev kapanışı: "tamamlandı" ile "kabul edildi" ayrıdır
+  Acceptance:
+    description: Bir koşu/adım çıktısının kabul kaydı — gerekli kontroller, artefakt özetleri, hakem (≠ üreten)
+    key: id
+    label: title
+    color: "#16A34A"
+    search: [title]
+    properties:
+      id: {type: string, required: true}
+      title: {type: string}
+      run_id: {type: string}
+      step_id: {type: string}
+      step_ids: {type: list}        # PROC2-FIX çok adımlı teslimin adımları (sırayla); tek adımda yok
+      deliverable_missing: {type: object}  # akışın teslim adımı bitmedi {step, status}; kabul son çıktılı adıma düştü
+      status: {type: string, enum: [pending, accepted, rejected]}
+      criteria: {type: list}        # [{id, text, required, kind}]
+      checks: {type: list}          # [{id, kind, status: passed|failed|not_run, detail, at}]
+      artifacts: {type: list}       # [{path, sha256, size}]
+      maker: {type: string}         # çıktıyı üreten ajan(lar)
+      reviewer: {type: string}      # "user" ya da Agent.slug (maker olamaz)
+      reviewer_kind: {type: string, enum: [user, agent]}
+      note: {type: text}
+      created_at: {type: string}
+      decided_at: {type: string}
+      # G1-C (geriye uyumlu, isteğe bağlı): doğrulama ≠ kullanıcı incelemesi; sürüm = artefakt sha kümesi
+      has_output: {type: bool}            # çıktısız koşu kabul edilemez
+      artifact_set_sha: {type: string}
+      verification_status: {type: string, enum: [passed, failed, not_run]}
+      review_status: {type: string, enum: [unreviewed, accepted, revision_requested, rejected]}
+      reviews: {type: list}               # [{at, decision, by, kind, note, artifact_set_sha, version, usable}]
+      reviewer_agreement: {type: list}    # [{agent, agent_verdict, user_decision, result, after_user, ...}]
+      version: {type: int}
+      previous_id: {type: string}         # önceki sürümün Acceptance.id'si
+      root_id: {type: string}
+      superseded_by: {type: string}       # yeni sürümün Acceptance.id'si
+      usable: {type: string, enum: [full, partial]}
+      user_missing: {type: list}          # "kısmen kullanılabilir" kabulde kullanıcının yazdığı eksikler
+      revision_run_id: {type: string}
+
+  # Faz 6 — değerlendirme koşusu: sürümlü görev setinin bir modelle ölçümü
+  EvalRun:
+    description: Sabit görev setinin (sürümlü) bir beyin/modelle değerlendirme koşusu
+    key: id
+    label: title
+    color: "#D946EF"
+    search: [title, suite]
+    properties:
+      id: {type: string, required: true}
+      title: {type: string}
+      suite: {type: string}
+      suite_version: {type: string}
+      connection: {type: string}
+      model: {type: string}
+      repeats: {type: int}
+      method: {type: object}        # ölçüm yöntemi (scorer'lar, eşikler)
+      status: {type: string}
+      summary: {type: object}       # {passed, failed, score, by_category}
+      items: {type: list}
+      started_at: {type: string}
+      finished_at: {type: string}
+
+  # W1b — kullanıcı takdiri: yalnızca kullanıcı yazar (MCP/ajan/iş akışı yazamaz); istemlere "referans örnek"
+  # olarak girer. Lesson'dan ayrıdır: kökeni ve güven düzeyi farklıdır.
+  Recognition:
+    description: Kullanıcının bir koşu ya da çıktı için verdiği takdir (yalnızca kullanıcı yazar); istemlere örnek olarak girer
+    key: id
+    label: title
+    color: "#F59E0B"
+    search: [title, reason]
+    properties:
+      id: {type: string, required: true}
+      title: {type: string}         # hedefin kısa başlığı (koşu ya da çıktı)
+      agent: {type: string}         # Agent.slug
+      kind: {type: string, enum: [thanks, coffee, tea, snack, meal, dessert, plant, trophy, cosmetic, team_lunch]}
+      item: {type: string}          # katalog kimliği (kozmetikte cosmetic:<mağaza öğesi>); yalnızca görsel
+      reason: {type: text}          # kullanıcı gerekçesi ≤ 200 karakter, maskeli
+      tags: {type: list}            # sabit çipler: structure, sources, accuracy, tone, speed, clean_code, initiative, brevity
+      run_id: {type: string}
+      step_id: {type: string}
+      deliverable_id: {type: string}
+      excerpt_ref: {type: string}   # kesitin alındığı Deliverable.id (isteğe bağlı)
+      exemplar: {type: text}        # ödüllendirilen çıktıdan ≤ 400 karakter maskeli kesit
+      namespace: {type: string}     # project:<key> | global
+      workflow: {type: string}      # hedef koşunun akışı (benzerlik puanı)
+      removed: {type: bool}         # true → hatırlanmaz (kullanıcı kaldırdı; geri alınabilir)
+      flagged: {type: bool}         # §11.3: ajanın araç/kabuk adımı çalışırken geldi; istemlere girmez
+      acknowledged: {type: bool}    # ajana bir kez teşekkür satırı izni verildi mi
+      weekly_pick: {type: bool}     # haftanın çalışanı seçimi (kullanıcı seçer, sistem hesaplamaz)
+      used_count: {type: int}       # istemlerde kullanıldığı adım sayısı
+      source: {type: string, enum: [user]}
+      scope: {type: string, enum: [real, fiction]}  # not = real (istemde L4); fiction kayıt isteme girmez
+      request_id: {type: string}    # istemci istek kimliği (idempotentlik)
+      created_at: {type: string}
+      removed_at: {type: string}
+
+  # AUDIT 2026-10-19 P1 — motor dışı, adı konmuş sistem LLM çağrısı (AI denetçi, bellek çıkarımı, bağlantı testi).
+  # `workflow/system_calls.account` yazar: günlük tavan kapısı + günlük defter + kullanım. Koşu/adım değildir.
+  SystemCall:
+    description: Motor dışındaki adı konmuş bir sistem LLM çağrısı (denetçi, bellek çıkarımı); kullanımı muhasebelenir
+    key: id
+    label: title
+    color: "#78716C"
+    search: [title]
+    properties:
+      id: {type: string, required: true}
+      title: {type: string}
+      kind: {type: string}          # quality_review | memory_extract | connection_test
+      ref: {type: string}           # çağrının konusu (QualityReport/Deliverable/Run kimliği ya da adım anahtarı)
+      connector: {type: string}
+      connection: {type: string}
+      model: {type: string}
+      status: {type: string, enum: [ok, error, blocked]}
+      usage: {type: object}         # {input, output, total, cache_read_tokens, cache_write_tokens, cost_usd}
+      tokens: {type: int}
+      cost_usd: {type: float}
+      error: {type: text}
+      created_at: {type: string}
+
+  # ---- FAZB2 (MIMARI-FAZB-plan §3): dünya/oyun okuma projeksiyonu. Yalnız `studio.cities.graph_sync` yazar (katalogdan,
+  # silinip yeniden kurulabilir); oyun defteri (game.sqlite / walk_city) kaynak kalır. `search: []` → FTS'e ve ajan belleğine
+  # girmez. Anahtarlar ön yüz kimlikleriyle birebir: simge `<şehir>:<simge>` (geom-intent `city:key`), damga pasaport kimliği.
+  City:
+    description: Yürünebilir şehir haritası (catalog.json / CITY_CATALOG)
+    key: id
+    label: label
+    color: "#F97316"
+    search: []
+    properties:
+      id: {type: string, required: true}
+      label: {type: string}
+      region: {type: string}
+      order: {type: int}
+      pack: {type: string}          # mağaza paketi (game/catalog.py SCENE_PACKS)
+  District:
+    description: Şehrin semti
+    key: id
+    label: label
+    color: "#FB923C"
+    search: []
+    properties:
+      id: {type: string, required: true}     # <şehir>:<semt>
+      label: {type: string}
+      city: {type: string}
+      vp: {type: int}
+      gz: {type: int}
+  Landmark:
+    description: Semtteki simge yapı
+    key: id
+    label: label
+    color: "#FDBA74"
+    search: []
+    properties:
+      id: {type: string, required: true}     # <şehir>:<simge> (geom-intent `city:key`)
+      label: {type: string}
+      city: {type: string}
+      district: {type: string}
+      interior: {type: bool}
+  RideLine:
+    description: Şehir içi ulaşım hattı (vapur, metro, teleferik…)
+    key: id
+    label: label
+    color: "#38BDF8"
+    search: []
+    properties:
+      id: {type: string, required: true}     # <şehir>:<hat>
+      label: {type: string}
+      city: {type: string}
+      kind: {type: string, enum: [vapur, tramvay, funikuler, kayik, metro, teleferik, otobus, monoray, balon]}
+      stops: {type: list}
+  Activity:
+    description: Şehir ritüeli (Anı defteri etkinliği; ödülsüz)
+    key: id
+    label: label
+    color: "#F472B6"
+    search: []
+    properties:
+      id: {type: string, required: true}     # rt:<şehir>:<ritüel>
+      label: {type: string}
+      city: {type: string}
+      kind: {type: string, enum: [ritual]}
+  PassportStamp:
+    description: Şehir pasaportu damgası tanımı (kazanılan damga değil; kazanım oyun defterinde kalır)
+    key: id
+    label: label
+    color: "#A3E635"
+    search: []
+    properties:
+      id: {type: string, required: true}     # city:<şehir>:<semt>[:lm|in|vp|gz|an:<x>] ya da city:<şehir>:stop:<durak>
+      label: {type: string}
+      city: {type: string}
+      kind: {type: string, enum: [district, lm, in, vp, gz, an, stop]}
+  Unlock:
+    description: Açılım kuralı — semt kilidi (önceki semt + seviye) ya da şehir paketi
+    key: id
+    label: label
+    color: "#FACC15"
+    search: []
+    properties:
+      id: {type: string, required: true}     # unlock:<şehir>:<semt> ya da pack:<paket>
+      label: {type: string}
+      kind: {type: string, enum: [district, pack]}
+      level: {type: int}
+
+relations:
+  ACCEPTS: {from: [Acceptance], to: [Run], description: Kabul kaydının ait olduğu koşu}
+  REVIEWED: {from: [Agent], to: [Acceptance], description: Kabulü inceleyen ajan hakem}
+  EVALUATED: {from: [EvalRun], to: [Run], description: Değerlendirme koşusunun başlattığı koşu}
+  FORKED_FROM: {from: [Run], to: [Run], description: Çatallanan koşu → kaynak koşu}
+  SENT: {from: [Agent], to: [Message], description: Mesajı gönderen ajan}
+  RECEIVED: {from: [Message], to: [Agent], description: Mesajın alıcısı}
+  IN_RUN: {from: [Message], to: [Run], description: Mesajın ait olduğu koşu}
+  CARRIES: {from: [Message], to: [Artifact], description: Mesajla taşınan dosya}
+  DELIVERED: {from: [Run], to: [Deliverable], description: Koşunun teslim ettiği çıktı (S50)}
+  DELIVERS: {from: [Deliverable], to: [Artifact], description: Çıktının dosyası (S50)}
+  DELIVERY_OF: {from: [Delivery], to: [Deliverable], description: Teslim kaydının ait olduğu çıktı (DELIV-P0)}
+  ASSESSES: {from: [QualityReport], to: [Deliverable], description: Kalite raporunun denetlediği çıktı (CG-QUALITY)}
+  TRIGGERED: {from: [Schedule], to: [Run], description: Zamanlayıcının başlattığı koşu}
+  LEARNED: {from: [Agent], to: [Lesson], description: Ajanın çıkardığı ders}
+  HIRED: {from: [Agent], to: [Agent], description: Bir ajanın devretme sırasında işe aldığı ajan}
+  SUPPORTS: {from: [Goal], to: [Goal], description: Alt hedef → üst hedef}
+  GOAL_OF: {from: [Goal], to: [Team, Agent], description: Hedefin sahibi (ekip veya ajan)}
+  PURSUES: {from: [Run], to: [Goal], description: Hedef için başlatılan çalıştırma}
+  EARNED: {from: [Agent], to: [Achievement], description: Ajanın kazandığı başarım}
+  IN_PROJECT: {from: [ExternalSession], to: [Project], description: Oturumun ait olduğu proje}
+  SPAWNED: {from: [ExternalSession], to: [ExternalSession], description: Oturumun başlattığı alt ajan}
+  MEMBER_OF: {from: [Agent], to: [Team], description: Ajanın ekibi}
+  REPORTS_TO: {from: [Agent], to: [Agent], description: Raporlama hattı (org şeması)}
+  LEADS: {from: [Agent], to: [Team], description: Ekibi yöneten ajan}
+  HAS_SKILL: {from: [Agent], to: [Skill], description: Ajana atanmış skill}
+  HAS_ROLE: {from: [Agent], to: [Role], description: Ajanın üstlendiği ofis rolü}
+  ROLE_IN: {from: [Role], to: [Team], description: Rolün ait olduğu ekip}
+  USES_CONNECTION: {from: [Agent], to: [Connection], description: Ajanın beyin bağlantısı}
+  PREFERS_MODEL: {from: [Agent], to: [Model], description: Ajanın seçili modeli}
+  SERVED_BY: {from: [Model], to: [Connection], description: Modeli sunan bağlantı}
+  ASSIGNED_TO: {from: [Task], to: [Agent], description: Görevin atandığı ajan}
+  EXECUTES: {from: [Run], to: [Task, Workflow], description: Çalıştırmanın yürüttüğü görev/akış}
+  HAS_STEP: {from: [Run], to: [Step], description: Çalıştırmanın adımları}
+  DEPENDS_ON: {from: [Step], to: [Step], description: Adım bağımlılığı (DAG)}
+  PERFORMED_BY: {from: [Step], to: [Agent], description: Adımı yapan ajan}
+  USED_MODEL: {from: [Step], to: [Model], description: Adımda kullanılan model}
+  INVOKED: {from: [Step], to: [Tool], description: Adımda çağrılan araç}
+  PRODUCED: {from: [Step], to: [Episode, Artifact], description: Adımın ürettiği anı/dosya}
+  RECALLED: {from: [Step], to: [Fact, Episode, Concept], description: Adımın bağlamına eklenen anılar}
+  REMEMBERS: {from: [Agent], to: [Episode], description: Ajanın epizodik belleği}
+  MENTIONS: {from: [Episode, Task], to: [Concept], description: Anı/görevde geçen kavram}
+  ASSERTED_IN: {from: [Fact], to: [Episode], description: Önermenin kaynağı olan anı}
+  FINDING_OF: {from: [Fact], to: [Run], description: Denetim adımının bulgusu → denetlenen koşu (PROC2-FIX P2-6)}
+  ABOUT: {from: [Fact], to: [Concept], description: Önermenin konusu}
+  RELATED_TO: {from: [Concept], to: [Concept], description: Birlikte geçen kavramlar (ağırlıklı)}
+  # FAZB2: SKOS benzeri taksonomi — dar kavram → geniş kavram (skos:broader; "narrower" bu kenarın tersidir, ayrıca yazılmaz).
+  # Döngü yasak (studio.graph.taxonomy denetler)
+  BROADER: {from: [Concept], to: [Concept], description: Dar kavram → geniş kavram (taksonomi)}
+  # geri alınabilir iddia geçmişi (hiçbiri silmez; eski sürüm grafta kalır)
+  SUPERSEDES: {from: [Fact, Deliverable], to: [Fact, Deliverable], same_type: true, description: Yeni sürüm → dünyada değişen eski bilgi ya da çıktının önceki sürümü}
+  CORRECTS: {from: [Fact], to: [Fact], description: Düzeltme → yanlış kaydedilmiş eski bilgi}
+  CONTRADICTS: {from: [Fact], to: [Fact], description: Çözülmemiş çelişki (itiraz)}
+  DERIVED_FROM: {from: [Fact], to: [Fact], description: Ortak bilgi → terfi ettiği ajan özel notu (R-1)}
+  SUPPORTED_BY: {from: [Fact], to: [Artifact], description: Bilginin kaynak artefaktı}
+  # W1b: takdir kayıtları
+  RECOGNIZES: {from: [Recognition], to: [Agent], description: Takdir edilen ajan}
+  RECOGNITION_OF: {from: [Recognition], to: [Run, Deliverable, Step], description: Takdir edilen koşu, çıktı ya da adım}
+  USED_RECOGNITION: {from: [Step], to: [Recognition], description: Adımın istemine referans olarak eklenen takdir}
+  # (AUDIT P2): adımın istemine giren skill — kenar {sha: sabitlenmiş anlık görüntü | null, how: always|catalog|selected}
+  USED_SKILL: {from: [Step], to: [Skill], description: Adımın isteminde kullanılan skill (sabitlenmiş sürüm ve yükleme biçimi)}
+  # AUDIT 2026-10-19 P1: sistem çağrısının konusu
+  CALLED_FOR: {from: [SystemCall], to: [Run, Step, Deliverable, QualityReport, Episode], description: Sistem LLM çağrısının yapıldığı kayıt}
+  # FAZB2: dünya/oyun projeksiyonu (yalnız studio.cities.graph_sync)
+  HAS_DISTRICT: {from: [City], to: [District], description: Şehrin semti}
+  HAS_LANDMARK: {from: [District], to: [Landmark], description: Semtteki simge}
+  HAS_LINE: {from: [City], to: [RideLine], description: Şehrin ulaşım hattı}
+  SERVES: {from: [RideLine], to: [District], description: Hattın durak verdiği semt}
+  HAS_ACTIVITY: {from: [City], to: [Activity], description: Şehrin ritüeli}
+  AT: {from: [Activity], to: [Landmark, District], description: Ritüelin yapıldığı simge (yoksa semt)}
+  STAMP_FOR: {from: [PassportStamp], to: [District, Landmark, City], description: Damganın belgelediği yer}
+  GRANTS: {from: [Unlock], to: [City, District], description: Açılımın açtığı şehir ya da semt}
+  REQUIRES: {from: [Unlock], to: [District], description: Semt açılımı için önce girilmesi gereken semt}
+  VISITED: {from: [Agent], to: [City], description: Ajanın o şehrin çalışma bölgesinde iş yaptığı (Run.work_zone)}

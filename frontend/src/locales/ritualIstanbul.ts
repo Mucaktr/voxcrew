@@ -1,0 +1,37 @@
+// İstanbul ritüel metinleri: `<locale>_label` (Yakındakiler fiili), `<locale>_done` (bitiş duyurusu),
+// `<locale>_note` (anı kartı notu; beslemede tek satırlık gerçek hayat notu). TR + EN aynı anahtarlar. Ödül dili yok.
+import { defineMessages } from "../lib/i18n";
+
+export const ritualIstanbul = defineMessages({
+  simit_marti_label: "Simit al, martıya at",
+  simit_marti_done: "Simidini aldın; martı bir lokmayı havada kaptı.",
+  simit_marti_note: "Gerçekte martıya az ve nadiren; izlemek de güzel.",
+  cay_bogaz_label: "Çay iç",
+  cay_bogaz_done: "İnce belli bardakta demli bir çay.",
+  cay_bogaz_note: "Boğaz'da ince belli bardakta çay.",
+  guvercin_yem_label: "Güvercinlere yem ver",
+  guvercin_yem_done: "Güvercinler tane yemi gagaladı.",
+  guvercin_yem_note: "Tane yem, ekmek değil.",
+  balik_ekmek_label: "Balık ekmek ye",
+  balik_ekmek_done: "Bir martı tüneğinden merakla baktı.",
+  balik_ekmek_note: "İskelede balık ekmek.",
+  kedi_mama_label: "Kediye mama koy",
+  kedi_mama_done: "Kedi mamasını yedi, mırladı.",
+  kedi_mama_note: "Sokak kedisine kendi maması.",
+}, {
+  simit_marti_label: "Buy a simit, toss to gulls",
+  simit_marti_done: "You bought a simit; a gull caught a bite mid-air.",
+  simit_marti_note: "In real life, only a little and rarely; watching is lovely too.",
+  cay_bogaz_label: "Have a tea",
+  cay_bogaz_done: "Strong tea in a tulip glass.",
+  cay_bogaz_note: "Tea in a tulip glass by the Bosphorus.",
+  guvercin_yem_label: "Feed the pigeons",
+  guvercin_yem_done: "The pigeons pecked at the seeds.",
+  guvercin_yem_note: "Seeds, not bread.",
+  balik_ekmek_label: "Have a fish sandwich",
+  balik_ekmek_done: "A gull watched curiously from its perch.",
+  balik_ekmek_note: "A fish sandwich on the pier.",
+  kedi_mama_label: "Put out food for the cat",
+  kedi_mama_done: "The cat ate and purred.",
+  kedi_mama_note: "Proper cat food for a street cat.",
+});

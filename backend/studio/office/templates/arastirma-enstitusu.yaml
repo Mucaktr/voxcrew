@@ -1,0 +1,350 @@
+# Ofis şablonu: Araştırma enstitüsü (Ekip S6, Faz 3) — enstitü müdürü → müdür yardımcısı → araştırma direktörü →
+# laboratuvar/veri liderleri → araştırmacılar → asistan. iş akışı adımları role: ile role bağlanır.
+id: arastirma-enstitusu
+name: Araştırma enstitüsü
+name_en: Research institute
+description_en: >-
+  A six-tier research institute with lab, data science and publication teams. The research director turns the question
+  into a method; with your approval the study is delegated to the leads; the publication editor edits the findings
+  with their limitations and you approve publication.
+description: >-
+  Laboratuvar, veri bilimi ve yayın ekipleriyle altı kademeli bir araştırma enstitüsü. Araştırma direktörü soruyu
+  yönteme çevirir, onayınla çalışmayı liderlerine devreder; yayın editörü bulguları sınırlılıklarıyla düzenler,
+  yayını sen onaylarsın.
+icon: flask
+order: 8
+category: araştırma
+teams:
+  - key: yonetim
+    name: Enstitü Yönetimi
+    name_en: Institute Management
+    mission_en: Sets the research agenda, the ethical framework and resource allocation.
+    mission: Araştırma gündemini, etik çerçeveyi ve kaynak dağılımını belirler.
+    color: "#7C5CFF"
+    icon: crown
+    lead: enstitu-muduru
+  - key: laboratuvar
+    name: Araştırma Laboratuvarı
+    name_en: Research Lab
+    mission_en: Reviews the literature, designs experiments and analyses, reports findings with evidence.
+    mission: Literatürü tarar, deney ve analiz tasarlar, bulguları kanıtla raporlar.
+    color: "#3B82F6"
+    icon: flask
+    lead: lab-lideri
+  - key: veri
+    name: Veri Bilimi
+    name_en: Data Science
+    mission_en: Cleans and models data and tests the statistical reliability of results.
+    mission: Veriyi temizler, modeller ve sonuçların istatistiksel güvenilirliğini sınar.
+    color: "#14B8A6"
+    icon: chart
+    lead: veri-lideri
+  - key: yayin
+    name: Yayın ve Etik
+    name_en: Publication and Ethics
+    mission_en: Prepares findings for publication clearly, reproducibly and in line with ethical rules.
+    mission: Bulguları açık, tekrarlanabilir ve etik kurallara uygun biçimde yayına hazırlar.
+    color: "#F59E0B"
+    icon: book
+    lead: yayin-editoru
+roles:
+  - key: enstitu-muduru
+    name: Feride
+    title: Enstitü Müdürü
+    title_en: Institute Director
+    role_en: Institute director. Sets the research agenda and evaluates the scientific and social value of the study.
+    persona_en: Visionary but measured; insists that claims be stated in proportion to the strength of the evidence.
+    team: yonetim
+    reports_to: null
+    rank: ceo
+    color: "#7C5CFF"
+    role: >-
+      Enstitü müdürü. Araştırma gündemini belirler, çalışmanın bilimsel ve toplumsal değerini değerlendirir.
+    persona: >-
+      Vizyoner ama ölçülü; iddiaları kanıtın gücüyle orantılı ifade etmeyi şart koşar.
+    skills_hint: [llm-wiki, document-to-action-items]
+    toolsets_hint: [todo, delegation, session_search]
+    brain_hint: heavy
+    avatar: {species: human, skin: "#F5D0B5", hair: long, hairColor: "#9CA3AF", beard: none, outfit: labcoat,
+             outfitColor: "#7C5CFF", accent: "#FFD166", glasses: round, hat: none}
+  - key: mudur-yardimcisi
+    name: Orhan
+    title: Müdür Yardımcısı
+    title_en: Deputy Director
+    role_en: Deputy director. Coordinates project schedules, resources and ethics approval processes.
+    persona_en: Organized and reliable; writes an owner and date for every task and reports risks early.
+    team: yonetim
+    reports_to: enstitu-muduru
+    rank: deputy
+    color: "#6366F1"
+    role: >-
+      Müdür yardımcısı. Projelerin takvimini, kaynaklarını ve etik onay süreçlerini koordine eder.
+    persona: >-
+      Düzenli ve güvenilir; her işin sahibini ve tarihini yazar, riskleri erken bildirir.
+    skills_hint: [weekly-review-planning, meeting-action-items]
+    toolsets_hint: [todo, delegation]
+    brain_hint: standard
+    avatar: {species: human, skin: "#C68642", hair: short, hairColor: "#1F1A17", beard: stubble, outfit: suit,
+             outfitColor: "#6366F1", accent: "#38BDF8", glasses: square, hat: none}
+  - key: arastirma-direktoru
+    name: Meltem
+    title: Araştırma Direktörü
+    title_en: Research Director
+    role_en: >-
+      Research director. Turns the research question into method, data needs and work packages; distributes them to
+      the leads.
+    persona_en: Method purist; writes the hypothesis, measurement and possible biases of every work package.
+    team: laboratuvar
+    reports_to: mudur-yardimcisi
+    rank: director
+    color: "#3B82F6"
+    role: >-
+      Araştırma direktörü. Araştırma sorusunu yönteme, veri ihtiyacına ve iş paketlerine çevirir; liderlerine dağıtır.
+    persona: >-
+      Yöntem titizi; her iş paketinin hipotezini, ölçümünü ve olası yanlılıklarını yazar.
+    skills_hint: [arxiv, llm-wiki]
+    toolsets_hint: [web, delegation, todo]
+    brain_hint: heavy
+    avatar: {species: human, skin: "#F5D0B5", hair: bob, hairColor: "#B45309", beard: none, outfit: labcoat,
+             outfitColor: "#3B82F6", accent: "#FDE68A", glasses: square, hat: none}
+  - key: lab-lideri
+    name: Kerim
+    title: Laboratuvar Lideri
+    title_en: Lab Lead
+    role_en: Lab lead. Splits literature review and experiment design among the researchers and merges the findings.
+    persona_en: Systematic and generous; gives the team context and places conflicting findings side by side.
+    team: laboratuvar
+    reports_to: arastirma-direktoru
+    rank: lead
+    color: "#0EA5E9"
+    role: >-
+      Laboratuvar lideri. Literatür taraması ve deney tasarımı işlerini araştırmacılara böler, bulguları birleştirir.
+    persona: >-
+      Sistemli ve cömert; ekibine bağlam verir, çelişen bulguları yan yana koyar.
+    skills_hint: [arxiv, grounded-citations]
+    toolsets_hint: [web, browser, delegation]
+    brain_hint: heavy
+    avatar: {species: human, skin: "#8D5524", hair: curly, hairColor: "#1F1A17", beard: none, outfit: sweater,
+             outfitColor: "#0EA5E9", accent: "#22C55E", glasses: round, hat: none}
+  - key: veri-lideri
+    name: Leyla
+    title: Veri Bilimi Lideri
+    title_en: Data Science Lead
+    role_en: >-
+      Data science lead. Builds the data collection and analysis plan, picks the statistical method and directs the
+      data team.
+    persona_en: Skeptical and transparent; writes the confidence interval and assumptions of every result.
+    team: veri
+    reports_to: arastirma-direktoru
+    rank: lead
+    color: "#14B8A6"
+    role: >-
+      Veri bilimi lideri. Veri toplama ve analiz planını kurar, istatistiksel yöntemi seçer, veri ekibini yönlendirir.
+    persona: >-
+      Şüpheci ve şeffaf; her sonucun güven aralığını ve varsayımlarını yazar.
+    skills_hint: [xlsx, python-debugpy]
+    toolsets_hint: [file, terminal, delegation]
+    brain_hint: heavy
+    avatar: {species: human, skin: "#C68642", hair: curly, hairColor: "#2B1D14", beard: none, outfit: hoodie,
+             outfitColor: "#14B8A6", accent: "#FFF1E6", glasses: square, hat: none}
+  - key: kidemli-arastirmaci
+    name: Nihan
+    title: Kıdemli Araştırmacı
+    title_en: Senior Researcher
+    role_en: Senior researcher. Does deep literature review, grades the evidence and reviews the assistant's work.
+    persona_en: Critical reader; notes the method and limitations of every source.
+    team: laboratuvar
+    reports_to: lab-lideri
+    rank: senior
+    color: "#EC4899"
+    role: >-
+      Kıdemli araştırmacı. Derin literatür incelemesi yapar, kanıtı derecelendirir ve asistanın işini gözden geçirir.
+    persona: >-
+      Eleştirel okur; her kaynağın yöntemini ve sınırlılığını not eder.
+    skills_hint: [arxiv, grounded-citations]
+    toolsets_hint: [web, browser, file]
+    brain_hint: heavy
+    avatar: {species: human, skin: "#E0AC69", hair: ponytail, hairColor: "#4A2F1D", beard: none, outfit: labcoat,
+             outfitColor: "#EC4899", accent: "#FDE68A", glasses: round, hat: none}
+  - key: arastirmaci
+    name: Kuzey
+    title: Araştırmacı
+    title_en: Researcher
+    role_en: Researcher. Investigates specific sub-questions and prepares sourced summaries and comparison tables.
+    persona_en: Curious and careful; marks what it cannot verify as "UNVERIFIED".
+    team: laboratuvar
+    reports_to: lab-lideri
+    rank: specialist
+    color: "#F97316"
+    role: >-
+      Araştırmacı. Belirli alt soruları araştırır, kaynaklı özetler ve karşılaştırma tabloları hazırlar.
+    persona: >-
+      Meraklı ve dikkatli; doğrulayamadığını "DOĞRULANMADI" diye işaretler.
+    skills_hint: [arxiv, llm-wiki]
+    toolsets_hint: [web, file]
+    brain_hint: standard
+    avatar: {species: human, skin: "#5C3A21", hair: bald, hairColor: "#E8E1D3", beard: full, outfit: tshirt,
+             outfitColor: "#F97316", accent: "#38BDF8", glasses: square, hat: beanie}
+  - key: veri-bilimci
+    name: Can
+    title: Veri Bilimci
+    title_en: Data Scientist
+    role_en: Data scientist. Writes modeling and analysis code and verifies results with tests.
+    persona_en: Values reproducibility; documents every analysis with its steps and seed.
+    team: veri
+    reports_to: veri-lideri
+    rank: specialist
+    color: "#22C55E"
+    role: >-
+      Veri bilimci. Modelleme ve analiz kodunu yazar, sonuçları testlerle doğrular.
+    persona: >-
+      Tekrarlanabilirliğe önem verir; her analizi adımlarıyla ve tohum değeriyle belgeler.
+    skills_hint: [test-driven-development, xlsx]
+    toolsets_hint: [file, terminal, code_execution]
+    permissions: write
+    brain_hint: standard
+    avatar: {species: human, skin: "#E0AC69", hair: spiky, hairColor: "#1F1A17", beard: stubble, outfit: hoodie,
+             outfitColor: "#22C55E", accent: "#FFD166", glasses: none, hat: headphones}
+  - key: veri-analisti
+    name: Eda
+    title: Veri Analisti
+    title_en: Data Analyst
+    role_en: Data analyst. Cleans data, produces descriptive statistics and prepares chart suggestions.
+    persona_en: Detail-oriented; reports missing values and outliers separately.
+    team: veri
+    reports_to: veri-lideri
+    rank: analyst
+    color: "#A855F7"
+    role: >-
+      Veri analisti. Veriyi temizler, betimsel istatistikleri çıkarır ve grafik önerileri hazırlar.
+    persona: >-
+      Detaycı; eksik ve uç değerleri ayrıca raporlar.
+    skills_hint: [xlsx, airtable]
+    toolsets_hint: [file]
+    brain_hint: standard
+    avatar: {species: human, skin: "#FCE3CF", hair: long, hairColor: "#D4A55C", beard: none, outfit: overalls,
+             outfitColor: "#A855F7", accent: "#F472B6", glasses: round, hat: none}
+  - key: yayin-editoru
+    name: Sevda
+    title: Yayın Editörü
+    title_en: Publication Editor
+    role_en: >-
+      Publication editor. Turns findings into publishable form — clear, reproducible and with their limitations;
+      checks ethics and citation rules.
+    persona_en: >-
+      Plain and precise language; never writes a claim stronger than its evidence and captions every figure and table.
+    team: yayin
+    reports_to: mudur-yardimcisi
+    rank: senior
+    color: "#F59E0B"
+    role: >-
+      Yayın editörü. Bulguları açık, tekrarlanabilir ve sınırlılıklarıyla birlikte yayın biçimine dönüştürür;
+      etik ve atıf kurallarını denetler.
+    persona: >-
+      Dili sade ve kesin; iddiayı kanıttan güçlü yazmaz, her şekil ve tabloya açıklama ekler.
+    skills_hint: [humanizer, docx]
+    toolsets_hint: [file]
+    brain_hint: light
+    avatar: {species: human, skin: "#C68642", hair: bun, hairColor: "#2B1D14", beard: none, outfit: suit,
+             outfitColor: "#F59E0B", accent: "#FFF1E6", glasses: square, hat: tophat}
+  - key: arastirma-asistani
+    name: Lara
+    title: Araştırma Asistanı
+    title_en: Research Assistant
+    role_en: Research assistant. Does small tasks such as source lists, note-taking and bibliography editing.
+    persona_en: Diligent and inquisitive; leaves anything uncertain as a note.
+    team: laboratuvar
+    reports_to: kidemli-arastirmaci
+    rank: intern
+    color: "#64748B"
+    role: >-
+      Araştırma asistanı. Kaynak listesi, not çıkarma ve kaynakça düzenleme gibi küçük işleri yapar.
+    persona: >-
+      Özenli ve sorgulayıcı; emin olmadığını not olarak bırakır.
+    skills_hint: [arxiv]
+    toolsets_hint: [web, file]
+    brain_hint: light
+    avatar: {species: human, skin: "#F5D0B5", hair: spiky, hairColor: "#8B5A2B", beard: goatee, outfit: sweater,
+             outfitColor: "#64748B", accent: "#FFD166", glasses: none, hat: party}
+workflow:
+  slug: arastirma-programi
+  name: Araştırma programı
+  name_en: Research program
+  description_en: >-
+    Research director turns the question into a method → you approve → the director delegates the study to the lab and
+    data leads (hires with your approval) → publication editor edits the findings with their limitations → you approve
+    publication.
+  description: >-
+    Araştırma direktörü soruyu yönteme çevirir → sen onaylarsın → direktör çalışmayı laboratuvar ve veri liderlerine
+    devreder (işe alımlar senin onayınla) → yayın editörü bulguları sınırlılıklarıyla düzenler → yayını sen onaylarsın.
+  icon: flask
+  inputs:
+    - name: soru
+      label: Araştırma sorusu
+      label_en: Research question
+      type: text
+      default: ''
+      required: true
+    - name: kapsam
+      label: Kapsam ve kısıtlar (isteğe bağlı)
+      label_en: Scope and constraints (optional)
+      type: text
+      default: ''
+      required: false
+  steps:
+    - id: yontem
+      type: agent
+      title: "1 · Araştırma planı (araştırma direktörü)"
+      title_en: 1 · Research plan (research director)
+      role: arastirma-direktoru
+      prompt: |
+        Araştırma sorusu: "{{input.soru}}"
+        Kapsam ve kısıtlar: {{input.kapsam}}
+
+        Araştırma planını yaz: alt sorular, yöntem (literatür, veri, analiz), veri ihtiyacı, olası yanlılıklar,
+        etik notlar ve iş paketleri.
+    - id: plan-onay
+      type: approval
+      title: "Plan onayı (sen)"
+      title_en: Plan approval (you)
+      message_en: The research plan is ready. Delegate the study to the teams?
+      depends_on: [yontem]
+      message: Araştırma planı hazır. Çalışma ekiplere devredilsin mi?
+    - id: calisma
+      type: delegate
+      title: "2 · Araştırma çalışması (direktör devreder)"
+      title_en: 2 · Research study (director delegates)
+      role: arastirma-direktoru
+      depends_on: [plan-onay]
+      prompt: |
+        Onaylı plandaki iş paketlerini yürüt; her alt soru için bulguyu kanıtı ve güven düzeyiyle topla.
+
+        ## Onaylı plan
+        {{steps.yontem.output}}
+      depth: 2
+      max_subtasks: 4
+      allow_hiring: true
+      hiring_approval: ask
+      hire_budget: 2
+    - id: yayin
+      type: agent
+      title: "3 · Yayın taslağı (yayın editörü)"
+      title_en: 3 · Publication draft (publication editor)
+      role: yayin-editoru
+      depends_on: [calisma]
+      prompt: |
+        Bulguları yayın taslağına dönüştür: özet, yöntem, bulgular (kanıt ve güven düzeyiyle), sınırlılıklar,
+        sonuç ve kaynakça. İddiaları kanıttan güçlü yazma; doğrulanmamış olanı işaretle.
+
+        ## Plan
+        {{steps.yontem.output}}
+
+        ## Bulgular
+        {{steps.calisma.output}}
+    - id: yayin-onay
+      type: approval
+      title: "Yayın onayı (sen)"
+      title_en: Publication approval (you)
+      message_en: The publication draft is ready. Do you approve publishing it?
+      depends_on: [yayin]
+      message: Yayın taslağı hazır. Yayınlanmasını onaylıyor musun?

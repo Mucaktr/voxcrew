@@ -1,0 +1,93 @@
+# Ofis şablonu: İkili ofis — Araştırmacı + Yazar
+# Free'nin 2 koltuğuna tam sığan ilk oturum şablonu: iki adımlı kısa bir akış, onay kapısı yok; teslim kabulü senin.
+id: ikili-gunluk-ozet
+name: "İkili ofis: Günlük özet"
+name_en: "Duo office: Daily brief"
+description_en: >-
+  Two people, two seats: a researcher collects sourced notes on a topic and a writer turns them into a short brief.
+  Fits the Free plan exactly and is made for your first delivery in a few minutes.
+description: >-
+  İki kişi, iki koltuk: araştırmacı bir konu hakkında kaynaklı notlar toplar, yazar bunları kısa bir özete çevirir.
+  Free paketin iki koltuğuna tam sığar; ilk teslimini birkaç dakikada almak için tasarlandı.
+icon: newspaper
+category: ikili
+order: 30
+teams:
+  - key: ozet-masasi
+    name: Özet masası
+    name_en: Brief desk
+    mission_en: Turns a topic into a short, sourced daily brief.
+    mission: Bir konuyu kısa ve kaynaklı bir günlük özete çevirir.
+    color: "#10B981"
+    icon: file
+    lead: arastirmaci
+roles:
+  - key: arastirmaci
+    name: Deniz
+    title: Araştırmacı
+    title_en: Researcher
+    role_en: Researcher. Collects 3-6 sourced, dated notes on the topic and marks what is uncertain.
+    persona_en: Curious and careful; gives a source and a date for every claim and never fills gaps with guesses.
+    team: ozet-masasi
+    reports_to: null
+    color: "#10B981"
+    role: Araştırmacı. Konu hakkında 3-6 kaynaklı ve tarihli not toplar, emin olunmayan yeri işaretler.
+    persona: Meraklı ve dikkatli; her iddianın kaynağını ve tarihini verir, boşlukları tahminle doldurmaz.
+    skills_hint: [grounded-citations, arxiv]
+    rank: lead
+    brain_hint: standard
+    toolsets_hint: [web, browser]
+    avatar: {species: human, skin: "#F5D0B5", hair: bob, hairColor: "#B45309", beard: none, outfit: blazer,
+             outfitColor: "#0F766E", accent: "#FFF1E6", glasses: round, hat: none}
+  - key: yazar
+    name: Ece
+    title: Yazar
+    title_en: Writer
+    role_en: Writer. Turns the researcher's notes into a brief of at most 200 words, conclusion first, sources kept.
+    persona_en: Clear and concise; writes the conclusion first and keeps every source the researcher gave.
+    team: ozet-masasi
+    reports_to: arastirmaci
+    color: "#3B82F6"
+    role: Yazar. Araştırmacının notlarını en çok 200 kelimelik, önce sonucu veren ve kaynakları koruyan bir özete çevirir.
+    persona: Açık ve öz yazar; önce sonucu verir, araştırmacının verdiği her kaynağı korur.
+    skills_hint: [docx, humanizer]
+    rank: specialist
+    brain_hint: light
+    toolsets_hint: [file]
+    avatar: {species: human, skin: "#8D5524", hair: long, hairColor: "#1F1A17", beard: none, outfit: sweater,
+             outfitColor: "#3B82F6", accent: "#FDE68A", glasses: none, hat: beanie}
+workflow:
+  slug: ikili-gunluk-ozet
+  name: Günlük özet
+  name_en: Daily brief
+  description_en: The researcher collects sourced notes → the writer turns them into a short brief → you accept it.
+  description: Araştırmacı kaynaklı notları toplar → yazar kısa bir özete çevirir → sen kabul edersin.
+  icon: newspaper
+  inputs:
+    - name: konu
+      label: Konu
+      label_en: Topic
+      type: text
+      default: ''
+      required: true
+  steps:
+    - id: notlar
+      type: agent
+      title: Kaynaklı notlar
+      title_en: Sourced notes
+      role: arastirmaci
+      prompt: |
+        Konu: "{{input.konu}}"
+
+        Bu konu hakkında 3-6 kısa, kaynaklı ve tarihli not çıkar. Emin olmadığın yeri açıkça işaretle.
+    - id: ozet
+      type: agent
+      title: Kısa özet
+      title_en: Short brief
+      role: yazar
+      depends_on: [notlar]
+      prompt: |
+        Aşağıdaki notları en çok 200 kelimelik bir günlük özete çevir: önce sonuç, sonra 3 madde, sonda kaynaklar.
+        Notlarda olmayan bilgi ekleme.
+
+        {{steps.notlar.output}}

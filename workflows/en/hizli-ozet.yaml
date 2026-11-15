@@ -1,0 +1,21 @@
+# English example flow (counterpart of ../hizli-ozet.yaml). Same slug and step ids; runs with the starter team (Developer, Researcher) without Hermes.
+# Used in place of the Turkish example when the UI language is English (a user flow with the same slug takes precedence).
+slug: hizli-ozet
+name: Quick summary
+description: The Researcher summarizes the text you paste in 5 bullet points.
+icon: zap
+inputs:
+  - name: metin
+    label: Text
+    type: textarea
+    default: ''
+    required: true
+steps:
+  - id: ozet
+    type: agent
+    title: Summary
+    agent: arastirmaci
+    prompt: |
+      Summarize the text below in 5 bullet points; each bullet at most 20 words.
+
+      {{input.metin}}

@@ -1,0 +1,22 @@
+# VoxCrew (free edition): docker compose up --build   ->   http://localhost:7420
+# Stop: docker compose down   (your data stays in the named volume; "docker compose down -v" deletes it)
+# No autostart on purpose: there is no "restart:" policy, so nothing comes back after a reboot unless you start it.
+services:
+  voxcrew:
+    build: .
+    image: voxcrew:free
+    ports:
+      - "127.0.0.1:7420:7420"   # loopback only on the host; never change this to 0.0.0.0 or a bare "7420:7420"
+    environment:
+      STUDIO_ALLOWED_HOSTS: ""   # keep empty: the Host check only accepts localhost / 127.0.0.1
+      # Ollama on the host (Docker Desktop on Windows/macOS):
+      # OLLAMA_HOST: "http://host.docker.internal:11434"
+      # The host's Ollama listens on 127.0.0.1 by default; see README ("Run with Docker") before opening it to the container.
+    # Linux (Docker Engine) has no host.docker.internal unless you add it:
+    # extra_hosts:
+    #   - "host.docker.internal:host-gateway"
+    volumes:
+      - voxcrew-data:/data
+
+volumes:
+  voxcrew-data:

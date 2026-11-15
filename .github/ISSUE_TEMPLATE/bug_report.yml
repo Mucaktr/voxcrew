@@ -1,0 +1,58 @@
+name: Hata bildirimi / Bug report
+description: Bir şey beklendiği gibi çalışmıyor / Something does not work as expected
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Teşekkürler! Lütfen günlüklerden **sır, API anahtarı, kişisel yol ya da kullanıcı adı** paylaşmayın
+        (yer tutucu kullanın: `~`, `%USERPROFILE%`, `<HERMES_HOME>`). Güvenlik açıkları için bu formu değil,
+        SECURITY.md'deki gizli bildirim yolunu kullanın.
+
+        Thanks! Please do **not** paste secrets, API keys, personal paths or user names from your logs
+        (use placeholders such as `~`, `%USERPROFILE%`, `<HERMES_HOME>`). For security issues, use the private
+        process in SECURITY.md instead of this form.
+  - type: textarea
+    id: what
+    attributes:
+      label: Ne oldu? / What happened?
+      description: Adımlar, beklenen ve gerçekleşen davranış. / Steps to reproduce, expected and actual behaviour.
+      placeholder: |
+        1. ...
+        2. ...
+        Beklenen / Expected:
+        Gerçekleşen / Actual:
+    validations:
+      required: true
+  - type: dropdown
+    id: os
+    attributes:
+      label: İşletim sistemi / OS
+      options: [Windows, macOS, Linux]
+    validations:
+      required: true
+  - type: dropdown
+    id: ui_language
+    attributes:
+      label: Arayüz dili / Interface language
+      options: [Türkçe, English]
+  - type: checkboxes
+    id: brains
+    attributes:
+      label: Kurulu bağlantılar / Installed connections
+      options:
+        - label: Ollama
+        - label: OpenAI uyumlu sunucu / OpenAI-compatible server (LM Studio, llama.cpp, vLLM, …)
+        - label: Codex CLI
+        - label: Claude Code CLI
+        - label: Hermes Agent
+  - type: input
+    id: version
+    attributes:
+      label: Sürüm / Version
+      description: "`/api/health` çıktısındaki sürüm ya da commit. / The version from `/api/health`, or the commit hash."
+  - type: textarea
+    id: logs
+    attributes:
+      label: Günlük / Logs (maskeli / masked)
+      render: text

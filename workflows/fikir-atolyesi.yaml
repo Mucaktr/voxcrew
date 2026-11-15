@@ -1,0 +1,34 @@
+# Örnek akış: başlangıç ekibiyle (Yazılımcı, Araştırmacı) Hermes'siz çalışır. Kendi akışların veri dizinine kaydedilir.
+slug: fikir-atolyesi
+name: Fikir atölyesi (paralel)
+description: İki ajan aynı soruya bağımsız fikir üretir (paralel dallar), Yazılımcı ikisini tek bir öneride birleştirir.
+icon: sparkles
+inputs:
+  - name: soru
+    label: Soru / problem
+    type: textarea
+    default: ''
+    required: true
+steps:
+  - id: fikir-a
+    type: agent
+    title: Fikirler (Araştırmacı)
+    agent: arastirmaci
+    prompt: |
+      Şu probleme 5 farklı çözüm fikri üret, her birinin artı/eksisini tek satırda yaz:
+      {{input.soru}}
+  - id: fikir-b
+    type: agent
+    title: Fikirler (Yazılımcı)
+    agent: yazilimci
+    memory: true
+    prompt: |
+      Şu probleme alışılmadık 5 çözüm fikri üret, her birini tek cümleyle açıkla:
+      {{input.soru}}
+  - id: sentez
+    type: agent
+    title: Sentez ve öneri
+    agent: yazilimci
+    depends_on: [fikir-a, fikir-b]
+    prompt: |
+      İki fikir listesini karşılaştır; en güçlü 3 fikri seç, neden seçtiğini yaz ve tek bir net öneriyle bitir.

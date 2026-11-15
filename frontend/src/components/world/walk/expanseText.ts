@@ -1,0 +1,41 @@
+// EXP (E1b, UX): yürüme modunda çevre arazisi etiketi ve "Ofise dön". TR + EN aynı anahtarlar.
+// Biyom adları voxel/expanse/biomes.ts `BiomeId` ile birebir.
+import { defineMessages } from "../../../lib/i18n";
+
+export const expanseText = defineMessages({
+  chip: "Çevre · {biome}",
+  chip_aria: "Yapılı dünyanın dışındasın: çevre arazisi, {biome}",
+  home: "Ofise dön",
+  home_aria: "Ofise dön: doğma noktasına ışınlan",
+  biome_suburb: "banliyö",
+  biome_countryside: "kırsal",
+  biome_meadow: "çayır",
+  biome_forest: "orman",
+  biome_beach: "kumsal",
+  biome_sea: "deniz ve adacıklar",
+  biome_snowfield: "kar ovası",
+  biome_craters: "krater alanı",
+  biome_islets: "yüzen adacıklar",
+  biome_reef: "mercan dibi",
+  biome_toyfield: "oyuncak çayırı",
+  biome_neonfringe: "arka sokaklar",
+  biome_mysticwoods: "mistik orman",
+}, {
+  chip: "Outskirts · {biome}",
+  chip_aria: "You are outside the built world: outskirts, {biome}",
+  home: "Back to office",
+  home_aria: "Back to office: teleport to the spawn point",
+  biome_suburb: "suburbs",
+  biome_countryside: "countryside",
+  biome_meadow: "meadow",
+  biome_forest: "forest",
+  biome_beach: "beach",
+  biome_sea: "sea and islets",
+  biome_snowfield: "snowfield",
+  biome_craters: "crater field",
+  biome_islets: "floating islets",
+  biome_reef: "reef floor",
+  biome_toyfield: "toy meadow",
+  biome_neonfringe: "back streets",
+  biome_mysticwoods: "mystic woods",
+});
