@@ -26,7 +26,9 @@ Bunları depo kökünden çalıştır:
 
 Geliştirirken backend'i `cd backend && uv run voxcrew --port 7431`, arayüzü `cd frontend && npm run dev` (http://localhost:5173) ile başlat. Vite vekili `/api` isteklerini 7420'de çalışıyor olabilecek kendi örneğine değil, geliştirme backend'ine göndersin diye iki tarafta da `STUDIO_PORT=7431` ayarla. Gerçek verini korumak için depo dışında ayrı bir veri dizini kullan, ör. `STUDIO_DATA_DIR=~/voxcrew-dev-data` (PowerShell: `$env:STUDIO_DATA_DIR = "$HOME\voxcrew-dev-data"`). Göreli bir yol, sunucuyu başlattığın klasöre göre çözülür.
 
-Bu depoda projenin kendi test paketi yok. PR'da değişikliği nasıl denediğini yaz (tip denetimi, derleme, arayüzde nerelere tıkladığın).
+[Derleme ve başlangıç kontrolü](.github/workflows/ci.yml), Windows ve Ubuntu'da bağımlılıkları kilit dosyalarından kurar, arayüzü derler ve ayrı bir yerel sunucu başlatır. Sağlık yanıtını, derlenmiş HTML'i ve ona bağlı bir JavaScript dosyasını denetler. Model çalıştırmaz; sağlayıcıların uçtan uca uyumluluğunu kanıtlamaz. Derlemeden sonra aynı kontrolü çalıştırabilirsin: `uv run --project backend --no-sync python scripts/ci_smoke.py`.
+
+Bu depoda projenin tam uygulama test paketi yok. PR'da değişikliği nasıl denediğini yaz (tip denetimi, derleme, arayüzde nerelere tıkladığın).
 
 ## Dosya düzeni
 

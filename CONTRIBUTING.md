@@ -26,7 +26,9 @@ Run these from the repository root:
 
 To run it while developing, start the backend with `cd backend && uv run voxcrew --port 7431` and the UI with `cd frontend && npm run dev` (http://localhost:5173). Set `STUDIO_PORT=7431` for both so the Vite proxy sends `/api` to your dev backend and not to an instance you may already run on 7420. Keep your real data safe with a separate data directory outside the repository, for example `STUDIO_DATA_DIR=~/voxcrew-dev-data` (PowerShell: `$env:STUDIO_DATA_DIR = "$HOME\voxcrew-dev-data"`). A relative path is resolved from the folder you start the server in.
 
-This repository does not ship the project's own test suite. Please say in your PR how you checked the change (type check, build, what you clicked through).
+The [build and smoke workflow](.github/workflows/ci.yml) installs locked dependencies, builds the frontend, and starts an isolated local server on Windows and Ubuntu. It checks the health response, the built HTML and a referenced JavaScript asset. It does not run a model or establish end-to-end provider compatibility. Run the same smoke check after building: `uv run --project backend --no-sync python scripts/ci_smoke.py`.
+
+This repository does not ship the project's full application test suite. Please say in your PR how you checked the change (type check, build, what you clicked through).
 
 ## Repository layout
 
