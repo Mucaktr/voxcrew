@@ -10,7 +10,11 @@ A local-first visual workspace for your AI crew. Connect Ollama, Codex CLI, Clau
 
 **[Get started](#quick-start)** · [Choose a model](#brains-you-can-use) · [Ask a question](https://github.com/Mucaktr/voxcrew/discussions) · [Türkçe](README.tr.md)
 
-![VoxCrew's explorable Istanbul voxel world](screenshots/01-hero.png)
+[![VoxCrew completes a real AI task and explores Istanbul, Cappadocia and London](docs/media/voxcrew-demo-preview.gif)](docs/media/voxcrew-demo.mp4)
+
+**[Watch / download the 42-second demo (MP4)](docs/media/voxcrew-demo.mp4?raw=1)** · [Demo details](docs/media/DEMO.md)
+
+A real summary task with **Ollama qwen3:4b**, followed by a tour of Istanbul, Cappadocia and London. The task took **3 min 41 sec**; this **42-second edit** shortens the waiting.
 
 </div>
 

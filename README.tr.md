@@ -10,7 +10,11 @@ Yapay zekâ ekibin için bilgisayarında çalışan görsel bir çalışma alan�
 
 **[Hemen başla](#hizli-baslangic)** · [Model seç](#kullanabileceğin-beyinler) · [Soru sor](https://github.com/Mucaktr/voxcrew/discussions) · [English](README.md)
 
-![VoxCrew'un gezilebilir İstanbul voksel dünyası](screenshots/01-hero-tr.png)
+[![VoxCrew'da gerçek bir yapay zekâ görevi ve İstanbul, Kapadokya, Londra gezisi](docs/media/voxcrew-demo-preview.gif)](docs/media/voxcrew-demo.mp4)
+
+**[42 saniyelik demoyu izle / indir (MP4)](docs/media/voxcrew-demo.mp4?raw=1)** · [Demo ayrıntıları](docs/media/DEMO.md)
+
+**Ollama qwen3:4b** ile gerçek bir özet görevi; ardından İstanbul, Kapadokya ve Londra gezisi. Görev **3 dakika 41 saniye** sürdü; **42 saniyelik videoda** beklemeler kısaltıldı.
 
 </div>
 
