@@ -8,7 +8,7 @@ Thanks for helping! This guide covers the dev setup, the house rules and what a 
 
 - **Bug reports** with exact steps, your OS and which brains are installed (use the issue form).
 - **Worlds and scenes** built with the world builder and exported as `.voxcrew-world.json`.
-- **Translations**: English strings that read awkwardly, or Turkish-only content (sample workflows, starter agent names, rare server messages).
+- **Translations**: English strings that read awkwardly or server messages that remain Turkish-only. Starter labels and bundled workflows already have English versions; corrections to either language are welcome.
 - **Docs**: anything in the README that didn't work exactly as written on your machine.
 
 For larger changes, please open an issue first so we can agree on the approach.

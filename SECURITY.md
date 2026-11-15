@@ -23,14 +23,14 @@ VoxCrew **tek kullanıcılı, yerel** bir uygulamadır. Ajanlar senin abonelikle
 
 | Risk | Önlem |
 |---|---|
-| Ağdan erişim | Sunucu yalnızca `127.0.0.1`'e bağlanır. `--host` seçeneği yoktur. Uzak erişim kimlik doğrulaması olmadan **desteklenmez**. |
+| Ağdan erişim | Kaynak kurulumunda sunucu `127.0.0.1`'e bağlanır. Docker imajı kapsayıcı içinde tüm arayüzleri dinler; hazır Compose yapılandırması ana makinede yalnızca `127.0.0.1:7420` portunu açar. Uzaktan erişim desteklenmez. |
 | DNS rebinding (kötü niyetli bir sitenin `127.0.0.1:7420`'ye kendi adıyla erişmesi) | Host başlığı yalnızca loopback adları olabilir (`127.0.0.1`, `localhost`, `::1`). Ek adlar `STUDIO_ALLOWED_HOSTS` ile, bilinçli olarak eklenir. |
 | CSRF (başka bir sitenin tarayıcın üzerinden istek atması) | Durum değiştiren isteklerde (POST/PUT/PATCH/DELETE) loopback dışı `Origin`, `Origin: null` ya da `Sec-Fetch-Site: cross-site` reddedilir. JSON gövdeleri `Content-Type` ister. |
 | Aşırı büyük istekler | Gövde sınırı (varsayılan 4 MiB, `STUDIO_MAX_BODY_BYTES`); daha sıkı sınır isteyen uç noktalar (ör. Claude Code alımı) kendi sınırını uygular. |
 | Kullanıcı ayar dosyalarının bozulması | Hermes, Claude ve Codex dosyalarına yazım yalnızca değişiklik servisi üzerinden olur: önizle → açıkça onayla → `<dosya>.bak-<zaman>` yedeği → atomik yaz → geri al. Var olan ayar satırları (ör. Codex `notify`) ezilmez. |
-| Ajanların fazla yetki alması | Codex varsayılan olarak salt okunur, Claude yalnızca okuma araçlarıyla çalışır. "Yazabilir" izni yalnızca çalışma klasörünü kapsar. Hermes `--yolo` ile çalıştırılmaz. MCP istemcileri varsayılan olarak onay kararı veremez. |
+| Ajanların fazla yetki alması | Başlangıç Yazılımcı ajanı yazma, Araştırmacı ajanı okuma izniyle oluşturulur. Codex izin düzeyine göre `read-only` veya `workspace-write` sandbox kullanır. Claude Code'a araç kısıtları iletilir; diğer bağlayıcılarda sınırlar farklıdır. Ayrıntılar README'deki beyin tablosundadır. MCP istemcileri varsayılan olarak onay kararı veremez. |
 | İstem enjeksiyonu | Görev metni, web içeriği, dosyalar ve ajan çıktısı veri olarak ele alınır; uygulamanın yetkisini genişletemez. Araç onayları arayüzde kullanıcıya sorulur. |
-| Sır sızıntısı | Sırlar hiçbir zaman depoya yazılmaz. Veri dizini, `.env*`, veritabanları, günlükler ve yedekler `.gitignore` kapsamındadır. Arayüz ve günlüklerde anahtarlar maskelenir. `scripts/scan_secrets.py` + gitleaks commit öncesinde ve CI'da tarama yapar. |
+| Sır sızıntısı | Sırları depoya eklemeyin. Veri dizini, `.env*`, veritabanları, günlükler ve yedekler `.gitignore` kapsamındadır; bu kurallar önceden izlenen dosyalardaki sırları kaldırmaz. Anahtarlar arayüz ve günlüklerde maskelenir. Bu herkese açık depo, commit öncesi veya CI sır taraması yapılandırması içermez; değişiklikleri paylaşmadan önce sır içermediğini kontrol edin. |
 | Gizlilik | Claude Code ve Codex oturum izlemede ham istem ve araç girdisi varsayılan olarak saklanmaz; transcript okuma varsayılan olarak kapalıdır. |
 
 ## Kapsam dışı

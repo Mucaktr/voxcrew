@@ -32,6 +32,16 @@ body:
     validations:
       required: true
   - type: dropdown
+    id: installation
+    attributes:
+      label: Kurulum yöntemi / Installation method
+      options:
+        - Kaynak kod / Source (start.ps1 or start.sh)
+        - Docker Compose
+        - Geliştirme sunucusu / Development server
+    validations:
+      required: true
+  - type: dropdown
     id: ui_language
     attributes:
       label: Arayüz dili / Interface language
@@ -42,6 +52,7 @@ body:
       label: Kurulu bağlantılar / Installed connections
       options:
         - label: Ollama
+        - label: Anthropic API
         - label: OpenAI uyumlu sunucu / OpenAI-compatible server (LM Studio, llama.cpp, vLLM, …)
         - label: Codex CLI
         - label: Claude Code CLI

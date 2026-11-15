@@ -8,7 +8,7 @@ Katkın için teşekkürler! Bu rehber geliştirme ortamını, proje kuralların
 
 - **Hata bildirimi.** Adımları, işletim sistemini ve kurulu beyinleri net yaz (issue formunu kullan).
 - **Dünyalar ve sahneler.** Dünya yapıcıyla kurup `.voxcrew-world.json` olarak dışa aktardığın dünyalar.
-- **Çeviri.** Kulağa tuhaf gelen İngilizce metinler ya da yalnızca Türkçe kalan içerik (örnek iş akışları, başlangıç ajanlarının adları, nadir sunucu iletileri).
+- **Çeviri.** Kulağa tuhaf gelen İngilizce metinler veya yalnızca Türkçe kalan sunucu iletileri. Başlangıç ajanlarının adları ve hazır iş akışlarının İngilizce karşılıkları zaten bulunur; iki dilde de düzeltme yapabilirsin.
 - **Belgeler.** README'de yazıldığı gibi çalışmayan her şey.
 
 Büyük değişikliklerde yaklaşım üzerinde anlaşmak için önce bir issue aç.

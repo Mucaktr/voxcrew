@@ -2,179 +2,150 @@
 
 # VoxCrew
 
-### Yapay zekâ ajanların, çalışırken izleyebileceğin küçük bir voksel ekip
+### Yapay zekâ ajanlarına çalışacakları bir dünya ver.
 
-Ekibini kur, işi ver, onlar çalışırken İstanbul'da dolaş.
-Her şey kendi bilgisayarında çalışır.
+Yapay zekâ ekibin için bilgisayarında çalışan görsel bir çalışma alanı. Ollama, Codex CLI, Claude Code veya kendi model sunucunu bağla; iş akışları çalıştır, ajanlarını voksel dünyada takip et.
 
-[English](README.md) · **Türkçe**
+**Erken sürüm · 2 aktif ajan · Windows / macOS / Linux · Türkçe / English**
 
-[Hızlı başlangıç](#hizli-baslangic) · [Nasıl çalışır](#nasıl-çalışır) · [Şehir](#şehir) · [Beyinler](#kullanabileceğin-beyinler) · [Gizlilik](#gizlilik-ve-önce-yerel)
+**[Hemen başla](#hizli-baslangic)** · [Model seç](#kullanabileceğin-beyinler) · [Soru sor](https://github.com/Mucaktr/voxcrew/discussions) · [English](README.md)
 
-![VoxCrew: voksel şehirde çalışan ajanlar](screenshots/01-hero-tr.png)
+![VoxCrew'un gezilebilir İstanbul voksel dünyası](screenshots/01-hero-tr.png)
 
 </div>
 
-## VoxCrew nedir?
+VoxCrew kendi bilgisayarında çalışır. Yerel bir model kullanabilir veya kendi hesabınla bir bulut sağlayıcısına bağlanabilirsin. **VoxCrew hesabı gerekmez. Bulut modelleri ve ağ kullanan araçlar veriyi bilgisayarının dışına gönderebilir.**
 
-Ajan araçlarının çoğu sana bir kayıt dökümü gösterir. VoxCrew ekibin kendisini gösterir.
+## Neler yapabilirsin?
 
-Her ajan blok dünyasında küçük bir karakter: bir rolü, bir beyni ve kullanabildiği araçlar var. İş verdiğinde kalkar ve işe koyulur. Web'de aramak için teleskopa, okumak için kitaplığa, komut çalıştırmak için terminale yürür. Kim ne yapıyor, iş nerede takıldı, kaça mal oldu; tek satır kayıt okumadan görürsün.
+- **Ekibini takip et:** ajanların durumunu ve araç kullanımını voksel ofiste gör; İstanbul, Kapadokya ve Londra'yı gez.
+- **Tekrarlanabilir işler kur:** paralel görevleri, kendi onayını ve gözden geçirme döngülerini YAML iş akışlarında birleştir.
+- **Çalışmayı incele:** durdur, devam ettir, bir adımı yeniden dene, bütçe koy ve işlem izini aç.
+- **Ortak bağlamı koru:** tam metin aramalı yerel SQLite grafında bilgileri sakla, sabitle veya geçersiz kıl.
 
-Altında gerçek bir ajan tezgâhı var: paralel dalları ve onay kapıları olan iş akışları, durdurup devam ettirebildiğin koşular, her adımın izi ve ajanların ortak kullandığı bir graf bellek. Üstündeki şehir de sekmeyi açık tutmak için güzel bir sebep.
-
-Bu, ücretsiz sürüm. Yalnızca senin bilgisayarında çalışır, hesap istemez, telemetri göndermez.
-
-## Nasıl çalışır
-
-### 1. Ekibini kur
-
-Bir ajan oluştur, rolünü ver, beynini seç: ücretsiz yerel bir Ollama modeli, OpenAI uyumlu herhangi bir sunucu, Anthropic API, Codex CLI ya da Claude Code. Hangi araçları kullanabileceğine sen karar verirsin. İlk açılışta iki hazır ajan gelir: bir yazılımcı, bir araştırmacı.
-
-![Ajan kurulumu ve beyin seçimi](screenshots/03-agent-setup.png)
-
-### 2. İşi ver
-
-**Ctrl+K**'ya bas ve ne istediğini yaz. Daha büyük işler için iş akışı kullan: birkaç ajan aynı anda çalışır, biri diğerinin işini gözden geçirir, onay kapısında ekip senden "tamam" bekler. İş akışları düz YAML dosyalarıdır; dört örnek hazır gelir.
-
-![Ajana görev verme](screenshots/04-give-task-tr.png)
-
-### 3. İşin yapılışını izle
-
-Ajan, kullandığı araca uygun istasyona yürür ve o an ne yaptığını gösterir. Koşuyu durdur, devam ettir, tek bir adımı yeniden dene ya da bütçe koy. İz görünümü her adımı, yeniden denemeyi ve araç çağrısını saklar.
-
-![Çalışan bir ajan ve anlık durumu](screenshots/05-agent-working.png)
-
-| İş akışları | İz | Bellek |
-|---|---|---|
-| ![Paralel dallı bir iş akışı](screenshots/06-workflow.png) | ![Koşu izi](screenshots/07-trace.png) | ![Graf bellek](screenshots/08-memory.png) |
-
-## Şehir
-
-Ekibin bir panoda yaşamıyor. İçinde yürüyebildiğin bir şehirde yaşıyor.
-
-Ajanlar çalışırken dışarı çık: İstanbul sokaklarında dolaş, bir yapıtın önünde dur, sonra Kapadokya'ya geç. İlk pasaport damganı kazanınca Londra da açılır. İş ofiste yapılır; şehir, sekmeyi kapatmamanın sebebidir.
-
-| İstanbul | Kapadokya |
-|---|---|
-| ![İstanbul'da yürüyüş](screenshots/09-city-walk.png) | ![Kapadokya](screenshots/10-city-kapadokya.png) |
-
-## Ücretsiz sürümde neler var
-
-| | |
-|---|---|
-| **3 şehir** | İstanbul ile Kapadokya baştan açık; Londra ilk pasaport damganla açılır. |
-| **2 ajan koltuğu** | Aynı anda iki ajan aktif olur, fazlası yedekte bekler. Yönetici işi var olan ajanlara devredebilir ama yeni ajan işe alamaz. |
-| **Voksel ofis** | Ajanlar masalarında oturur, aracına uygun istasyona yürür, o an ne yaptığını gösterir. |
-| **İş akışları** | Paralel dallar, onay kapıları, gözden geçirme döngüleri; YAML olarak saklanır. Örnekler `workflows/` klasöründe (İngilizceleri `workflows/en/` içinde). |
-| **Kesintiye dayanıklı koşular** | Durdur, devam ettir, adımı yeniden dene, koşu başına bütçe, tam iz. |
-| **Graf bellek** | Ontoloji denetimli, tam metin aramalı bir SQLite grafı. Bilgileri sabitle ya da geçersiz kıl. |
-| **İki dil** | Arayüzün tamamı Türkçe ve İngilizce. |
-
-**Yakında:** yeni şehirler ve büyük ekipler için paketler. Şu an satışta bir şey yok; hazır olduklarında uygulama haber verir.
+Mevcut modelleriyle görsel bir ortamda çalışmak isteyen bireysel geliştiriciler ve yapay zekâ meraklıları için tasarlandı. Tek kullanıcılı, erken bir sürümdür; [ücretsiz sürümün sınırlarına](#ücretsiz-sürüm-ve-mevcut-sınırlar) göz at.
 
 <a name="hizli-baslangic"></a>
 ## Hızlı başlangıç
 
-### Kaynaktan kurulum
-
-**Git**, **[uv](https://docs.astral.sh/uv/)** ve **[Node.js](https://nodejs.org/) 20+** gerekir. Python 3.11+ yoksa uv onu da indirir. Başlatma betiği bağımlılıkları kilit dosyalarından kurar (`uv sync --locked`, `npm ci`), arayüzü ilk seferde derler ve uygulamayı **http://127.0.0.1:7420** adresinde açar. İlk çalıştırma birkaç dakika sürebilir, sonrası birkaç saniyedir.
-
-**Windows (PowerShell)**
-
-```powershell
-winget install --id Git.Git -e; winget install --id astral-sh.uv -e; winget install OpenJS.NodeJS.LTS   # zaten kurulu olanları atla
-# ardından yeni araçlar PATH'e girsin diye YENİ bir PowerShell penceresi aç
-git clone https://github.com/Mucaktr/voxcrew.git "$HOME\voxcrew"
-powershell -NoProfile -ExecutionPolicy Bypass -File "$HOME\voxcrew\start.ps1" -Open
-```
-
-**macOS**
-
-```sh
-brew install git uv node        # zaten kurulu olanları atla
-git clone https://github.com/Mucaktr/voxcrew.git ~/voxcrew
-sh ~/voxcrew/start.sh --open
-```
-
-**Linux**
-
-```sh
-curl -LsSf https://astral.sh/uv/install.sh | sh   # ardından yeni bir terminal aç
-# Node.js 20+: dağıtımının paketi eskiyse nodejs.org'daki kurucuyu kullan (node --version ile bak)
-git clone https://github.com/Mucaktr/voxcrew.git ~/voxcrew
-sh ~/voxcrew/start.sh --open
-```
-
-Bir adım başarısız olursa betikler kısa bir `HATA:` iletisiyle durur. Uygulamayı durdurmak için terminalde **Ctrl+C**'ye bas. Başka port için `-Port 7430` / `--port 7430` (ya da `STUDIO_PORT`) kullan. `git pull` sonrası arayüzü yeniden derlemek için `-Rebuild` / `--rebuild` ekle.
-
-**İlk açılış.** Tek soruluk 18+ onayından sonra (yalnızca bilgisayarında saklanır) bir kurulum sihirbazı bulduğu araçları gösterir ve bir sahne seçtirir. İki başlangıç ajanını, *Yazılımcı* ile *Araştırmacı*'yı tanıtır ve her birine bulabildiği ilk beyni verir. Henüz beynin yoksa **Bağlantılar**'ı aç: Ollama'yı başlatabilir, donanımına uygun bir model indirebilir ya da yerel bir OpenAI uyumlu sunucu bağlayabilirsin. Sonra **Ctrl+K**'ya basıp ilk görevini ver. Beyin olmadan da uygulama açılır; ancak ajan kartlarında *Beyin seçilmedi* yazar ve bir iş akışı adımı çalışmak yerine bu iletiyle durur.
-
-### Docker ile çalıştırma
-
-Elinde yalnızca Docker varsa en kısa yol bu:
+**[Git](https://git-scm.com/downloads)**, **[uv](https://docs.astral.sh/uv/getting-started/installation/)** ve **[Node.js 20+](https://nodejs.org/)** kur. Sonra yeni bir terminal aç. Python 3.11+ yoksa uv indirebilir.
 
 ```sh
 git clone https://github.com/Mucaktr/voxcrew.git
 cd voxcrew
-docker compose up --build
 ```
 
-İlk derleme birkaç dakika sürer. Sonra <http://localhost:7420> adresini aç. **Ctrl+C** ile durdur; arka planda başlattıysan (`docker compose up -d --build`) `docker compose down` kullan. Verilerin `voxcrew-data` adlı Docker biriminde durur (`/data` olarak bağlanır); `docker compose down -v` onu siler. Yeniden başlatmadan sonra kendiliğinden bir şey açılmaz.
+**Windows — PowerShell**
 
-Sayfa yalnızca kendi bilgisayarında yayımlanır (`127.0.0.1:7420`). Bu satırı `0.0.0.0` yapma: uygulamada giriş yok, güvenliği yalnızca senin makinenden erişilebilmesine dayanır. Kapsayıcının içinde sunucu tüm arayüzleri dinler (`STUDIO_BIND_HOST`, yalnızca Docker imajı kabul eder); Host ve Origin denetimleri normal kurulumdaki kadar sıkı kalır.
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\start.ps1 -Open
+```
 
-**Yerel modeller (bilgisayarındaki Ollama).** Kapsayıcı, bilgisayarının `127.0.0.1` adresini göremez. Docker Desktop'ta (Windows, macOS) `docker-compose.yml` içinde `OLLAMA_HOST: "http://host.docker.internal:11434"` ayarla. Linux'ta ayrıca oradaki `extra_hosts: host.docker.internal:host-gateway` satırlarının yorumunu kaldır. Ollama varsayılan olarak `127.0.0.1`'i dinler; bu yüzden onu ana makinede `OLLAMA_HOST=0.0.0.0` ile başlatman gerekebilir. Bu, yerel ağına da açar; güvenlik duvarı kullan. Bu yol uçtan uca denenmedi. Alternatif olarak ağındaki bir OpenAI uyumlu sunucuyu **Bağlantılar**'dan bağla.
+**macOS / Linux**
 
-**Kapsayıcıda çalışmayanlar.** İmajda Claude Code, Codex, Gemini CLI ve Hermes yok, kapsayıcı da bilgisayarındaki programları başlatamaz. Bu yüzden bu "beyinler" sunulmaz ve kurulum sihirbazı Ollama'yı senin yerine başlatıp kuramaz. Erişim anahtarı olmadan yalnızca yerel çağıranı kabul eden webhook ve içeri alma uç noktaları, ana makinenden gelen istekleri reddeder (Docker onları yerel değilmiş gibi gösterir); onlara erişim anahtarı ver. Claude Code ya da Codex'i beyin olarak kullanmak için normal kurulumu kullan.
+```sh
+sh ./start.sh --open
+```
+
+İlk açılış bağımlılıkları kilit dosyalarından kurar ve arayüzü derler. Tarayıcı açılmazsa **<http://127.0.0.1:7420>** adresine git. Sunucuyu **Ctrl+C** ile durdur.
+
+**Uygulama modelsiz açılır. Ajan çalıştırmak için çalışan bir model bağlantısı gerekir.** Yerel Ollama için indirilmiş model ve yeterli donanım gerekir; bulut sağlayıcılarının kendi hesap, kota ve ücretleri geçerlidir.
+
+[Ayrıntılı kurulum: gereksinimler, Docker, güncelleme ve sorun giderme →](docs/SETUP.tr.md)
+
+### İlk sonucunu al
+
+1. Yerel 18+ onayını ve kurulum sihirbazını tamamla. Gerekirse arayüz dilini Türkçeye çevir.
+2. **Bağlantılar** bölümünde modelinin hazır olduğunu kontrol et. **Ajanlar** bölümünde modeli **Araştırmacı**ya ata ve izinlerini gözden geçir.
+3. **Ctrl+K**'ya bas, **Araştırmacı**yı seç ve şu örneği yapıştır:
+
+```text
+Aşağıdaki metni üç maddede özetle. Yalnızca bu metni kullan;
+web'de arama yapma ve dosya değiştirme.
+
+Ekibimiz cuma günü için bir ürün demosu hazırlıyor. Prototip hazır.
+Kurulum rehberini kontrol etmemiz ve kısa bir tanıtım videosu çekmemiz gerekiyor.
+Ali rehberi kontrol edecek. Deniz perşembe günü videoyu çekecek.
+```
+
+4. Çıktıyı ve işlem izini görmek için görevi aç. Beklenen sonuç, verdiğin metnin kısa bir özetidir; kalite kullandığın modele bağlıdır.
+
+Başlangıçtaki **Yazılımcı**, çalışma klasöründe yazma iznine sahiptir. **Araştırmacı** okuma izniyle başlar. Gerçek proje dosyalarıyla çalışmadan önce seçtiğin beynin izin davranışını kontrol et.
+
+## Hazır iş akışlarını dene
+
+Üç örnek, iki dilde hazır gelir. İngilizce arayüz isteklerinde İngilizce örnekler otomatik yüklenir; kendi iş akışların otomatik çevrilmez.
+
+| İş akışı | Ne gösterir? |
+|---|---|
+| [Hızlı özet](workflows/hizli-ozet.yaml) | Metin yapıştır; Araştırmacıdan beş kısa maddelik özet al. |
+| [Fikir atölyesi](workflows/fikir-atolyesi.yaml) | İki paralel fikir listesi ve ardından ortak bir öneri. |
+| [Araştır → Onayla → Yaz → Denetle](workflows/arastir-ve-yaz.yaml) | Araştırma notları, senin onayın, taslak ve sınırlı gözden geçirme döngüsü. Araştırma için uygun araçlar ve kaynak kontrolü gerekir. |
+
+| Ajan çalışırken | İş akışı düzenleyicisi |
+|---|---|
+| ![Ajanın etkinliği ve görev durumu](screenshots/05-agent-working.png) | ![Görsel iş akışı düzenleyicisi](screenshots/06-workflow.png) |
+
+<details>
+<summary>Şehri, işlem izini ve ortak belleği gör</summary>
+
+| Şehirde yürüyüş | Kapadokya |
+|---|---|
+| ![İstanbul'da yürüyüş](screenshots/09-city-walk.png) | ![Kapadokya](screenshots/10-city-kapadokya.png) |
+
+| İşlem izi | Ortak bellek |
+|---|---|
+| ![Görevin işlem izi](screenshots/07-trace.png) | ![Graf bellek](screenshots/08-memory.png) |
+
+Ekran görüntüleri örnek yapılandırmaları gösterir. Ücretsiz sürümde iki ajan aktif olabilir; ek ajanlar yedekte bekler.
+
+</details>
 
 ## Kullanabileceğin beyinler
 
-| Beyin | Maliyet | Nasıl bağlanır |
+| Bağlantı | Gerekenler | Araç davranışı |
 |---|---|---|
-| [Ollama](https://ollama.com/) | Ücretsiz, yerelde çalışır | Canlı model listesi. Onayından sonra donanımına uygun önerilen bir modeli indirir. |
-| OpenAI uyumlu uç noktalar | Yerelde ücretsiz ya da kendi API anahtarın | Aynı anda birden çok adlandırılmış uç nokta; her birinin kendi maskeli anahtarı ve modeli olur (LM Studio, llama.cpp, vLLM, Mistral, Gemini, OpenRouter ve diğerleri). |
-| Anthropic API | Kendi API anahtarın | Kendi anahtarınla doğrudan Messages API; Claude Code planından ayrı faturalanır. |
-| [Codex CLI](https://github.com/openai/codex) | ChatGPT / Codex planın | Mevcut `codex` oturumunu kullanır. Varsayılan olarak salt okunur. |
-| [Claude Code](https://docs.anthropic.com/en/docs/claude-code) | Claude planın | Mevcut `claude` oturumunu kullanır. Varsayılan olarak yalnızca okuma araçları. |
-| [Hermes Agent](https://github.com/NousResearch/hermes-agent) (isteğe bağlı) | Ücretsiz, açık kaynak | Profil, skill ve araç setleri ekler. VoxCrew onsuz da tam çalışır. |
+| [Ollama](https://ollama.com/) | Donanımına uygun yerel bir model | Araç destekleyen modeller, araç veya skill atandığında VoxCrew'un araç köprüsünü kullanır. |
+| OpenAI uyumlu sunucu veya API | Çalışan yerel sunucu ya da bulut uç noktası ve API anahtarı | Araç desteği modele, uç noktaya ve atanmış MCP araçlarına veya skill'lere bağlıdır. |
+| Anthropic API | Kendi API anahtarın | Doğrudan Messages API; Claude Code hesabından ayrıdır. Araçlar yapılandırmaya bağlıdır. |
+| [Codex CLI](https://github.com/openai/codex) | Kurulu CLI ve çalışan oturum | Ajan izinleri korumalı alanı belirler; bu bağlayıcı VoxCrew'un araç başına yasak listesini uygulamaz. |
+| [Claude Code](https://code.claude.com/docs/en/overview) | Kurulu CLI ve çalışan oturum | Bağlayıcı, araç başına kısıtları Claude Code'a iletir. |
+| [Hermes Agent](https://github.com/NousResearch/hermes-agent) (isteğe bağlı) | Mevcut kurulum, profil ve model erişimi | Hermes'in araçlarını ve ayarlarını kullanır; bu bağlayıcı VoxCrew'un araç başına yasak listesini uygulamaz. |
 
-Model maliyeti VoxCrew'a dahil değildir: bulut modellerin parasını doğrudan sağlayıcısına ödersin. Yerel Ollama modelleri ücretsizdir.
+Bulut model kullanımı VoxCrew'a dahil değildir. Sağlayıcının ücret ve kotaları geçerlidir. Tamamen yerel kullanım için hem modellerin **hem araçların** yerel olması gerekir; Ollama seçmek, web aracını çevrimdışı yapmaz.
 
-**Araç kuralları her beyinde aynı şekilde uygulanmaz.** Araç başına izin/yasak kuralları yerel modellerde (araçları stüdyo kendisi çalıştırır) ve Claude Code'da (`--disallowedTools` olarak iletilir) uygulanır. Codex CLI ve Hermes'te araç başına anahtar yoktur; bu kurallar onlar için **uygulanmaz**, Codex'i yalnızca kendi korumalı alanı sınırlar. OpenAI uyumlu uç noktalara araç verilmez. Araçlar sayfası bunu ajan başına gösterir.
+## Ücretsiz sürüm ve mevcut sınırlar
 
-## Gizlilik ve önce yerel
+| İçerik | Sınır veya davranış |
+|---|---|
+| Aktif ekip | 2 ajan; ek ajanlar yedekte bekler. |
+| Hazır şehirler | İstanbul ve Kapadokya; Londra ilk pasaport damganla açılır. |
+| Kayıtlı özel iş akışları | 5; hazır örnekler ayrıdır. |
+| Aktif zamanlama / özel dünya | 1 zamanlama / 3 özel dünya. |
+| Uzak API bağlantıları | 1 adlandırılmış uzak bağlantı; yerel OpenAI uyumlu uç noktalar bu kotaya dahil değildir. |
+| Diller | Türkçe ve İngilizce arayüz ve başlangıç örnekleri; nadir sunucu iletileri Türkçe kalabilir. |
+| Kurulum | Kaynak kod veya Docker; henüz hazır masaüstü kurulum paketi yok. |
 
-- **Yalnızca yerel.** Sunucu `127.0.0.1`'e bağlanır, `--host` seçeneği yoktur. Loopback olmayan Host başlıklı istekler reddedilir (DNS rebinding); siteler arası durum değiştiren istekler de öyle (CSRF).
-- **Hesap yok, telemetri yok.** VoxCrew yalnızca senin kurduğun beyinlere ve uç noktalara bağlanır: seçtiğin bir bulut CLI ya da API uç noktası (istemlerini o sağlayıcıya gönderir), tıkladığın Ollama model indirmeleri ve ayarlarsan bir OTLP uç noktası.
-- **Verilerin kendi veri klasöründe kalır**, deponun içinde asla: Windows'ta `%LOCALAPPDATA%\VoxCrew`, macOS'ta `~/Library/Application Support/VoxCrew`, Linux'ta `$XDG_DATA_HOME/voxcrew`. `STUDIO_DATA_DIR` ile değiştirebilirsin.
-- **Sessiz ayar değişikliği yok.** Hermes, Claude ya da Codex ayarlarında yapılacak değişiklikler önce sana gösterilir, yedeklenir ve yalnızca onayından sonra yazılır.
-- **Görev metni, web sayfaları ve ajan çıktısı veri sayılır.** Bir ajanın izinlerini değiştiremez, hiçbir şeyi onaylayamaz. Bir model yine de verdiğin izinleri kötüye kullanacak şekilde yanıltılabilir; bu yüzden yazma iznini yalnızca gereken yerde ver.
-- **18+.** VoxCrew yetişkinler içindir. İlk açılıştaki onay yalnızca bilgisayarında saklanır.
+Bu sürüm tek kullanıcılıdır ve yerel kullanım içindir. Loopback adresinde tut; çok kullanıcılı giriş sistemi yoktur. Docker'ın CLI ve ağ sınırları [kurulum rehberinde](docs/SETUP.tr.md#docker) açıklanır.
 
-Tehdit modeli ve özel güvenlik açığı bildirimi için: [SECURITY.md](SECURITY.md).
+## Gizlilik ve izinler
 
-## Bilinen sınırlar
+- Ayarlar, iş akışları ve bellek yerel veri klasöründe saklanır. [Veri konumlarına](docs/SETUP.tr.md#veri-ve-ortam-degiskenleri) bak.
+- Varsayılan olarak kullanım telemetrisi gönderilmez. Bulut modelleri, ağ araçları, model indirmeleri ve açıkça yapılandırılmış OTLP dışa aktarımı ağ isteği yapabilir.
+- Ajan çalıştırmadan önce araç ve dosya izinlerini gözden geçir. Görev metni ve model çıktısı izin vermez; yalnızca modele verilen talimatlar bir güvenlik sınırı oluşturmaz.
+- Desteklenen haricî CLI ayarlarındaki değişikliklerde önizleme, onay, yedekleme ve geri alma akışı kullanılır.
 
-- Bu erken bir sürüm ve tek kullanıcılı bir uygulama: uzaktan erişim yok, çok kullanıcılı giriş yok.
-- Kaynaktan derlemek için uv ve Node gerekir. Henüz hazır kurulum paketi yok.
-- Örnek iş akışları, başlangıç ajanlarının varsayılan adları ve nadiren görülen birkaç sunucu iletisi yalnızca Türkçe. Örnek iş akışlarının İngilizce kopyaları `workflows/en/` içinde; kullanmak için veri klasöründeki `workflows/` klasörüne kopyala.
-- Bulut beyinler kendi kotalarına bağlıdır. VoxCrew ne kadar kullanıldığını gösterir ama bir sınırı kaldıramaz.
+Sınırlar ve özel güvenlik açığı bildirimi için [güvenlik politikasını](SECURITY.md) oku.
 
-## Ortam değişkenleri
+## VoxCrew'un gelişimine katıl
 
-| Değişken | Varsayılan | Ne işe yarar |
-|---|---|---|
-| `STUDIO_PORT` | `7420` | Sunucu portu (başlatma betikleri okur) |
-| `STUDIO_DATA_DIR` | platform veri klasörü | Graf veritabanı, ayarlar, kullanıcı iş akışları, çalışma klasörü |
-| `STUDIO_WORKDIR` | `<veri klasörü>/workspace` | Ajanların dosya okuyup yazdığı klasör |
-| `HERMES_HOME` | `~/.hermes` | Hermes Agent ana klasörü |
-| `OLLAMA_HOST` | `127.0.0.1:11434` | Ollama adresi |
-| `STUDIO_ALLOWED_HOSTS` | yok | Ek Host adları, virgülle ayrılmış (yalnızca güvendiğin yerel adlar) |
-| `STUDIO_MAX_BODY_BYTES` | `4194304` | İstek gövdesi sınırı |
+- **İlk deneme:** [Discussions bölümünde](https://github.com/Mucaktr/voxcrew/discussions) işletim sistemini, seçtiğin beyni ve takıldığın adımı paylaş. Sırları ve kişisel yolları çıkar.
+- **Hata veya özellik fikri:** [Issue aç](https://github.com/Mucaktr/voxcrew/issues/new/choose).
+- **Katkı:** [Belge, çeviri veya dışa aktarılmış dünyalarla](CONTRIBUTING.tr.md) başlayabilirsin.
+- **Gelişmeleri takip et:** Depoyu yıldızlayarak kaydet ve faydalı bulduğun bir iş akışını paylaş.
 
-## İletişim ve lisans
+## Lisans
 
-Sorular ve hata bildirimleri: mustafa.ucak@gmail.com. Geliştiren: Mustafa Uçak. Bu sürüm [PolyForm Shield License 1.0.0](https://polyformproject.org/licenses/shield/1.0.0) ile lisanslıdır; tam metin [LICENSE](LICENSE) dosyasındadır; üçüncü taraf bileşenler ve yazı tipi lisansları [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) içinde listelenir.
+Geliştiren: Mustafa Uçak. Kaynak kod, rekabet kısıtı içeren **[PolyForm Shield License 1.0.0](LICENSE)** altında sunulur. Kullanım veya dağıtım öncesinde lisansı incele. [Üçüncü taraf bildirimleri](THIRD_PARTY_NOTICES.md).
 
-VoxCrew; Nous Research, OpenAI, Anthropic ya da Ollama ile bağlantılı değildir. Hermes, Codex, ChatGPT, Claude, Claude Code ve Ollama ilgili sahiplerinin ticari markalarıdır; burada yalnızca uyumluluğu anlatmak için anılır.
+VoxCrew; Nous Research, OpenAI, Anthropic veya Ollama ile bağlantılı değildir. Ürün adları uyumluluğu anlatır; ticari markalar ilgili sahiplerine aittir.
